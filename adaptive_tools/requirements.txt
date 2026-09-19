@@ -1,0 +1,8 @@
+requests
+urllib3
+python-dotenv
+PyMuPDF
+pypdf
+pandas
+pyarrow
+tqdm
