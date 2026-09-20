@@ -10,7 +10,9 @@ object Routes {
 
     const val LEVEL_INTRO = "level_intro"
     const val LEVEL_QUIZ = "level_quiz"
-    const val LEVEL_RESULT = "level_result"
+    /** Результат теста: `score` — число верных ответов (нет → уровень по умолчанию B1). */
+    const val LEVEL_RESULT = "level_result?score={score}"
+    const val LEVEL_RESULT_SCORE_ARG = "score"
 
     const val LIBRARY = "library"
     const val SEARCH = "search"
@@ -23,6 +25,7 @@ object Routes {
     const val BOOK_READER = "book_reader/{bookId}"
     const val RECAP = "recap/{bookId}"
 
+    fun levelResult(score: Int? = null) = if (score == null) "level_result" else "level_result?score=$score"
     fun bookDetail(bookId: String) = "book_detail/$bookId"
     fun bookReader(bookId: String) = "book_reader/$bookId"
     fun recap(bookId: String) = "recap/$bookId"

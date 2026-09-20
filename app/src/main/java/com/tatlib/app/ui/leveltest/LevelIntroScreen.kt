@@ -107,7 +107,7 @@ fun LevelIntroScreen(navController: NavHostController) {
                     )
                     ActionButton(
                         text = stringResource(R.string.level_intro_self),
-                        onClick = { navController.navigate(Routes.LEVEL_RESULT) },
+                        onClick = { navController.navigate(Routes.levelResult()) },
                         style = ActionStyle.Secondary,
                         alignEnd = true,
                         modifier = Modifier.align(Alignment.End)

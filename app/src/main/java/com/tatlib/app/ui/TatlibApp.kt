@@ -16,6 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
+import com.tatlib.app.data.MockData
+import com.tatlib.app.data.TatarLevel
 import com.tatlib.app.ui.auth.LoginScreen
 import com.tatlib.app.ui.auth.RegisterScreen
 import com.tatlib.app.ui.book.BookDetailScreen
@@ -100,8 +104,16 @@ fun TatlibApp() {
                 composable(Routes.LEVEL_QUIZ) {
                     LevelQuizScreen(navController = navController, viewModel = appViewModel)
                 }
-                composable(Routes.LEVEL_RESULT) {
-                    LevelResultScreen(navController = navController, viewModel = appViewModel)
+                composable(
+                    Routes.LEVEL_RESULT,
+                    arguments = listOf(navArgument(Routes.LEVEL_RESULT_SCORE_ARG) { type = NavType.IntType; defaultValue = -1 })
+                ) { backStack ->
+                    val score = backStack.arguments?.getInt(Routes.LEVEL_RESULT_SCORE_ARG) ?: -1
+                    LevelResultScreen(
+                        navController = navController,
+                        viewModel = appViewModel,
+                        initialLevel = if (score >= 0) MockData.levelFromScore(score) else TatarLevel.B1
+                    )
                 }
                 composable(Routes.LIBRARY) {
                     LibraryScreen(navController = navController, viewModel = appViewModel)

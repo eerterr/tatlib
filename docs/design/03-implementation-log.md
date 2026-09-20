@@ -120,3 +120,9 @@
 - Ридер: слово для API и всплывашки — без кавычек/знаков препинания по краям (`trim { !it.isLetterOrDigit() }`), раньше уходило «Кырлай» с кавычками (как и в старом коде).
 - Ридер: перенос строки после строки слова не переносится во вторую часть текста — иначе под карточкой была пустая строка.
 - Скриншоты — `docs/design/screenshots/{light,dark}/*.jpg` (JPEG q85 вместо PNG: 35 МБ → 7 МБ).
+
+## Три открытых вопроса — закрыты владельцем («разрешаю все три»)
+
+- `AppViewModel.translateWord`: в `catch` теперь `null` вместо строки «Тәрҗемә табылмады» — единственная правка ViewModel, разрешённая отдельно; текст берётся из `reader_translation_missing`.
+- `BookReaderScreen`: `viewModel.updateProgress(book.id, (index + 1) / pageCount)` при смене страницы — по нему главная и мини-бар выбирают текущую книгу (одностраничная «Шүрәле» получает 1.0 сразу при открытии).
+- `Routes.LEVEL_RESULT = "level_result?score={score}"` + `Routes.levelResult(score?)`; `LevelQuizScreen` передаёт число верных ответов, `LevelIntroScreen` («Үзем күрсәтермен») — без очков; `TatlibApp` считает `MockData.levelFromScore(score)` и отдаёт в `LevelResultScreen(initialLevel)`. Ручной выбор уровня на экране по-прежнему возможен.

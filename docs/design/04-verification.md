@@ -43,8 +43,10 @@
 7. **Русская локаль** (`values-ru`) — скриншоты сняты только с татарскими строками (локаль эмулятора en → `values/`).
 8. Во время прогона тапы по словам записали события в `backend/tatar_adaptive.db` через `/api/events/word` — база откачена `git checkout`, бэкенд не менялся; `/api/events/word` при этом отвечал «Перевод не найден» (Google Translate 429 из бэкенда) — контракт перевода слов на этой машине не проверен.
 
-## Открытые вопросы владельцу (до трёх)
+## Открытые вопросы — закрыты по команде владельца (20.09.2026, «разрешаю все три»)
 
-1. `AppViewModel.kt:294` кладёт «Тәрҗемә табылмады» в состояние перевода — из-за этого ресурс `reader_translation_missing` (tt/ru) не срабатывает; починка — одна строка в ViewModel (`= null`), но файл вне scope фазы. Разрешить?
-2. `viewModel.updateProgress` никто не вызывает (и до редизайна тоже) — прогресс книг всегда 0, мини-бар «Хәзер укыла» и «Укуны дәвам итү» всегда показывают первую книгу. Добавить вызов из ридера при смене страницы (одна строка в `BookReaderScreen`)?
-3. Результат теста (`correctAnswers`) не передаётся в `LevelResult` (как и раньше) — уровень всегда B1. Оставить как есть или передать через аргумент маршрута (изменение навигации)?
+| Вопрос | Правка | Проверено на эмуляторе |
+|---|---|---|
+| `AppViewModel.kt` клал «Тәрҗемә табылмады» в состояние | в `catch` — `_selectedWordTranslation.value = null`; текст даёт ресурс `reader_translation_missing` (tt/ru) | бэкенд остановлен → тап по слову → во всплывашке «Тәрҗемә табылмады» из ресурса (`16b-reader-word-missing.jpg`). При работающем бэкенде он сам отдаёт 200 со строкой «Перевод не найден» (сбой Google Translate внутри `events.py`) — это текст сервера, не приложения |
+| `updateProgress` никто не вызывал | `BookReaderScreen`: `LaunchedEffect(book.id, currentPageIndex)` → `updateProgress(id, (index + 1) / pageCount)` | после открытия «Шүрәле» мини-бар и «Укуны дәвам итү» показывают «Шүрәле · Габдулла Тукай» (`09b-library-after-reading.jpg`) |
+| Результат теста не доходил до `LevelResult` | маршрут `level_result?score={score}` (`NavType.IntType`, default −1), `Routes.levelResult(score?)`; квиз передаёт `correctAnswers`, «Үзем күрсәтермен» — без очков → B1; `LevelResultScreen(initialLevel = MockData.levelFromScore(score))` | 5 верных ответов → выбран C1 (`08b-levelresult-5of5.jpg`); `./gradlew assembleDebug` — BUILD SUCCESSFUL |

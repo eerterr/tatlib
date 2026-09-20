@@ -110,6 +110,10 @@ fun BookReaderScreen(
         ReaderMessage(stringResource(R.string.reader_no_text)) { navController.popBackStack() }
         return
     }
+    // Прогресс = доля просмотренных страниц; по нему главная и мини-бар выбирают текущую книгу.
+    LaunchedEffect(book.id, currentPageIndex) {
+        viewModel.updateProgress(book.id, (currentPageIndex + 1f) / book.pageCount)
+    }
 
     val displayedText = when {
         selectedVersion >= 0.75f -> page.originalText

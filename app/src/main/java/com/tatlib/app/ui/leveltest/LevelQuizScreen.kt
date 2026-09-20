@@ -124,7 +124,7 @@ fun LevelQuizScreen(
                             val selected = selectedOption ?: return@ActionButton
                             if (question.options[selected].isCorrect) correctAnswers++
                             if (last) {
-                                navController.navigate(Routes.LEVEL_RESULT) {
+                                navController.navigate(Routes.levelResult(correctAnswers)) {
                                     popUpTo(Routes.LEVEL_QUIZ) { inclusive = true }
                                 }
                             } else {

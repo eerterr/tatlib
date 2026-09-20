@@ -43,9 +43,11 @@ import com.tatlib.app.ui.theme.tatlibColors
 @Composable
 fun LevelResultScreen(
     navController: NavHostController,
-    viewModel: AppViewModel
+    viewModel: AppViewModel,
+    /** Уровень по результату теста (`MockData.levelFromScore`) или B1 при ручном выборе. */
+    initialLevel: TatarLevel = TatarLevel.B1
 ) {
-    var selectedLevel by remember { mutableStateOf(TatarLevel.B1) }
+    var selectedLevel by remember { mutableStateOf(initialLevel) }
     var language by remember { mutableStateOf(AppLanguage.TAT) }
 
     fun goToLibrary(level: TatarLevel) {
