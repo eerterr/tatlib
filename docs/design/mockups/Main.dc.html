@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="tt">
+<head>
+<meta charset="utf-8">
+<title>Splash</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="tatlib.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#F6F1E7;font-family:"Golos Text","PT Sans",Arial,sans-serif;color:#1D3128}
+a{color:inherit} a:hover{color:inherit}
+</style>
+</helmet>
+<div class="tl screen" style="width: 390px; height: 844px; background: #F6F1E7; color: #1D3128;">
+
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+  <span style="color:var(--forest)"><svg class="ic" viewBox="0 0 24 24" width="56" height="56" aria-hidden="true"><path d="M12 21v-8"/><path d="M12 13c0-4 3-7 8-7 0 4-3 7-8 7z"/><path d="M12 13c0-3-2.5-5.5-6-5.5 0 3 2.5 5.5 6 5.5z"/></svg></span>
+  <a class="h1" href="Welcome.dc.html" style="font-size:34px;line-height:40px">TatLib</a>
+  <div style="width:28px;height:28px;border-radius:999px;border:3px solid var(--sand);border-top-color:var(--forest)" aria-label="Йөкләнә"></div>
+</div>
+<p class="display-i soft" style="font-size:20px;line-height:26px;text-align:center;padding:0 24px 48px">Татарча күбрәк</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

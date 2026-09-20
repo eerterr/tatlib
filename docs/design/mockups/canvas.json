@@ -1,0 +1,273 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-09-20T03:10:13Z"
+ },
+ "title": "TatLib — экраны",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Splash",
+   "is_interactive": true
+  },
+  "Welcome.dc.html": {
+   "x": 470,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Рәхим итегез",
+   "is_interactive": true
+  },
+  "WelcomeRu.dc.html": {
+   "x": 940,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Добро пожаловать (RU)",
+   "is_interactive": true
+  },
+  "AuthChoice.dc.html": {
+   "x": 1410,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Керү яки теркәлү",
+   "is_interactive": true
+  },
+  "Register.dc.html": {
+   "x": 0,
+   "y": 1264,
+   "w": 390,
+   "h": 844,
+   "title": "Теркәлү",
+   "is_interactive": true
+  },
+  "Login.dc.html": {
+   "x": 470,
+   "y": 1264,
+   "w": 390,
+   "h": 844,
+   "title": "Керү",
+   "is_interactive": true
+  },
+  "LevelIntro.dc.html": {
+   "x": 0,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "Дәрәҗә тесты",
+   "is_interactive": true
+  },
+  "Quiz.dc.html": {
+   "x": 470,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "Тест 1/5",
+   "is_interactive": true
+  },
+  "LevelResult.dc.html": {
+   "x": 940,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "Дәрәҗә нәтиҗәсе",
+   "is_interactive": true
+  },
+  "Library.dc.html": {
+   "x": 0,
+   "y": 3792,
+   "w": 390,
+   "h": 844,
+   "title": "Китапханә",
+   "is_interactive": true
+  },
+  "Search.dc.html": {
+   "x": 470,
+   "y": 3792,
+   "w": 390,
+   "h": 844,
+   "title": "Эзләү",
+   "is_interactive": true
+  },
+  "BookDetail.dc.html": {
+   "x": 940,
+   "y": 3792,
+   "w": 390,
+   "h": 844,
+   "title": "Шүрәле",
+   "is_interactive": true
+  },
+  "Reader.dc.html": {
+   "x": 0,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "Ридер · Оригинал",
+   "is_interactive": true
+  },
+  "ReaderWord.dc.html": {
+   "x": 470,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "Ридер · Сүз",
+   "is_interactive": true
+  },
+  "ReaderDark.dc.html": {
+   "x": 940,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "Ридер · Караңгы",
+   "is_interactive": true
+  },
+  "Recap.dc.html": {
+   "x": 1410,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "Сессия нәтиҗәсе",
+   "is_interactive": true
+  },
+  "Progress.dc.html": {
+   "x": 0,
+   "y": 6320,
+   "w": 390,
+   "h": 844,
+   "title": "Алгарышың",
+   "is_interactive": true
+  },
+  "ScannerStart.dc.html": {
+   "x": 470,
+   "y": 6320,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер",
+   "is_interactive": true
+  },
+  "ScannerBusy.dc.html": {
+   "x": 940,
+   "y": 6320,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер · тану",
+   "is_interactive": true
+  },
+  "ScannerFound.dc.html": {
+   "x": 1410,
+   "y": 6320,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер · табылды",
+   "is_interactive": true
+  },
+  "Profile.dc.html": {
+   "x": 1880,
+   "y": 6320,
+   "w": 390,
+   "h": 844,
+   "title": "Профиль",
+   "is_interactive": true
+  },
+  "Components.dc.html": {
+   "x": 0,
+   "y": 7584,
+   "w": 1000,
+   "h": 1560,
+   "title": "Компонентлар · якты"
+  },
+  "ComponentsDark.dc.html": {
+   "x": 1080,
+   "y": 7584,
+   "w": 1000,
+   "h": 1560,
+   "title": "Компонентлар · караңгы"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Welcome.dc.html",
+  "WelcomeRu.dc.html",
+  "AuthChoice.dc.html",
+  "Register.dc.html",
+  "Login.dc.html",
+  "LevelIntro.dc.html",
+  "Quiz.dc.html",
+  "LevelResult.dc.html",
+  "Library.dc.html",
+  "Search.dc.html",
+  "BookDetail.dc.html",
+  "Reader.dc.html",
+  "ReaderWord.dc.html",
+  "ReaderDark.dc.html",
+  "Recap.dc.html",
+  "Progress.dc.html",
+  "ScannerStart.dc.html",
+  "ScannerBusy.dc.html",
+  "ScannerFound.dc.html",
+  "Profile.dc.html",
+  "Components.dc.html",
+  "ComponentsDark.dc.html"
+ ],
+ "notes": {
+  "row1": {
+   "x": 0,
+   "y": -260,
+   "text": "1 · Кереш: Splash, Welcome (TAT / RU), выбор входа",
+   "kind": "title1",
+   "maxW": 1800
+  },
+  "row2": {
+   "x": 0,
+   "y": 1004,
+   "text": "2 · Теркәлү һәм керү",
+   "kind": "title1",
+   "maxW": 1400
+  },
+  "row3": {
+   "x": 0,
+   "y": 2268,
+   "text": "3 · Дәрәҗә тесты: интро, сорау 1/5, нәтиҗә",
+   "kind": "title1",
+   "maxW": 1400
+  },
+  "row4": {
+   "x": 0,
+   "y": 3532,
+   "text": "4–6 · Китапханә · Эзләү · Китап",
+   "kind": "title1",
+   "maxW": 1400
+  },
+  "row5": {
+   "x": 0,
+   "y": 4796,
+   "text": "7–8 · Ридер (оригинал, сүз, караңгы) · Recap",
+   "kind": "title1",
+   "maxW": 1800
+  },
+  "row6": {
+   "x": 0,
+   "y": 6060,
+   "text": "9–11 · Алгарышың · Сканер ×3 · Профиль",
+   "kind": "title1",
+   "maxW": 2270
+  },
+  "row7": {
+   "x": 0,
+   "y": 7324,
+   "text": "12 · Компонентлар: якты һәм караңгы тема",
+   "kind": "title1",
+   "maxW": 2080
+  }
+ },
+ "designSystems": []
+}
