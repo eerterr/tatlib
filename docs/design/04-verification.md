@@ -50,3 +50,9 @@
 | `AppViewModel.kt` клал «Тәрҗемә табылмады» в состояние | в `catch` — `_selectedWordTranslation.value = null`; текст даёт ресурс `reader_translation_missing` (tt/ru) | бэкенд остановлен → тап по слову → во всплывашке «Тәрҗемә табылмады» из ресурса (`16b-reader-word-missing.jpg`). При работающем бэкенде он сам отдаёт 200 со строкой «Перевод не найден» (сбой Google Translate внутри `events.py`) — это текст сервера, не приложения |
 | `updateProgress` никто не вызывал | `BookReaderScreen`: `LaunchedEffect(book.id, currentPageIndex)` → `updateProgress(id, (index + 1) / pageCount)` | после открытия «Шүрәле» мини-бар и «Укуны дәвам итү» показывают «Шүрәле · Габдулла Тукай» (`09b-library-after-reading.jpg`) |
 | Результат теста не доходил до `LevelResult` | маршрут `level_result?score={score}` (`NavType.IntType`, default −1), `Routes.levelResult(score?)`; квиз передаёт `correctAnswers`, «Үзем күрсәтермен» — без очков → B1; `LevelResultScreen(initialLevel = MockData.levelFromScore(score))` | 5 верных ответов → выбран C1 (`08b-levelresult-5of5.jpg`); `./gradlew assembleDebug` — BUILD SUCCESSFUL |
+
+## Артефакты сборки (20.09.2026)
+
+- `docs/tatlib-debug-20260920.apk` — debug-сборка из `main` (`1f12490`), та самая, что снята на эмуляторе; ставится на Android-телефон напрямую. Бэкенд ищет по `10.0.2.2:8000` (эмулятор) — для телефона нужно поменять `BASE_URL` в `data/ApiClient.kt` и пересобрать.
+- `docs/design/tatlib-app-screens.pdf` — 12 страниц: все экраны в светлой и тёмной теме + состояния.
+- Инструменты сборки (JDK 17, SDK 34, AVD, кэш Gradle) с машины владельца удалены по его команде после сборки; для пересборки — установить заново, шаги в `03-implementation-log.md`.
