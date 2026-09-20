@@ -81,7 +81,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import kotlin.coroutines.coroutineContext
 
 /**
  * Сканер (ScannerStart / Busy / Text / Match.dc.html): системная камера или галерея → OCR →
@@ -169,7 +168,7 @@ fun ScannerScreen(
         uri?.let { processImage(it) }
     }
     val openGallery = { galleryLauncher.launch("image/*") }
-    val openCamera = {
+    val openCamera: () -> Unit = {
         val uri = AppContextHolder.createImageUri()
         cameraUri = uri
         // Без приложения камеры (эмулятор) launch бросает ActivityNotFoundException.
