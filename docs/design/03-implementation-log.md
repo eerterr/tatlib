@@ -61,3 +61,13 @@
 - Поля пароля: «глаз» рабочий (Visibility/VisibilityOff), в макете статичный.
 - Ошибка «Серсүзләр туры килми» — `bodySmall` `error` под полем повтора (RU «Пароли не совпадают»).
 - Register/Login: `imePadding()` + скролл, кнопка остаётся над клавиатурой.
+
+### Группа B — LevelIntro, Quiz, LevelResult, Progress, Profile (коммит bd40d13 → cherry-pick)
+
+- Фон экранов теста `#FBF9F4` → `colorScheme.background` (cream #F6F1E7): отдельного токена нет.
+- Декор (дуги, звёзды) и арка вложены в `Box.statusBarsPadding()` вместе с контентом — геометрия макета (без строки статуса) сохраняется относительно шапки.
+- Quiz: счётчик «Сорау n / N» наложен на `TopBar` как `labelSmall` uppercase; неактивная «Алга» без выбора — `alpha 0.45`, клик игнорируется (в макете состояние не нарисовано). `DecoA()` — `internal` helper в `LevelIntroScreen.kt`, переиспользован в `LevelResultScreen.kt`.
+- Progress: заголовок `headlineMedium` 30/36 вместо 34/40; чипы «Соңгы тәрҗемәләр» — горизонтальный скролл (`FlowRow` экспериментальный) без «· {book}» (в `RecentWordDto` нет книги); «актив көн» — всегда «—» (в API нет); waffle подсвечивает дни текущей недели по `recent_words[].created_at` (ISO UTC, `SimpleDateFormat` + `Calendar`, понедельник = 0); при ошибке API — `EmptyState(«Әлегә мәгълүмат юк», текст исключения)`, карточка уровня и фраза остаются; «Урта» — в ресурсе `%1$s · Урта` под B1 из `UserMeta`; чипы периодов без действия.
+- `data/UserMeta.kt`: уровень B1 и возраст 18 скопированы из `users`/`user_level_state` с `TODO backend`.
+- Profile: нижняя навигация не рисуется (маршрут не в `bottomBarRoutes`), низ — `navigationBarsPadding()`; экран без прокрутки — на экранах ниже ~700 dp возможен клип; чипы темы/шрифта `FilterChip` 36 dp вместо 32; чип «Literata» не в шрифте Literata; «Укучы» `headlineMedium` 30/36 вместо 26/30; иконка Settings без действия; тень аватара `tatlibColors.shadow` (в тёмной прозрачная).
+- RU-строки: «переводы / уникальные слова / активные дни» без склонения по числу; «%1$d лет»; «Алгарышың» → «Твой прогресс»; фраза дня `translatable="false"`.
