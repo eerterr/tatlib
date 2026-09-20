@@ -1,24 +1,17 @@
 package com.tatlib.app.ui
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoStories
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -28,6 +21,8 @@ import com.tatlib.app.ui.auth.RegisterScreen
 import com.tatlib.app.ui.book.BookDetailScreen
 import com.tatlib.app.ui.book.BookReaderScreen
 import com.tatlib.app.ui.book.RecapScreen
+import com.tatlib.app.ui.components.BottomNav
+import com.tatlib.app.ui.components.MiniReadingBar
 import com.tatlib.app.ui.home.LibraryScreen
 import com.tatlib.app.ui.leveltest.LevelIntroScreen
 import com.tatlib.app.ui.leveltest.LevelQuizScreen
@@ -36,22 +31,10 @@ import com.tatlib.app.ui.navigation.Routes
 import com.tatlib.app.ui.onboarding.AuthChoiceScreen
 import com.tatlib.app.ui.onboarding.SplashScreen
 import com.tatlib.app.ui.onboarding.WelcomeScreen
+import com.tatlib.app.ui.profile.ProfileScreen
 import com.tatlib.app.ui.progress.ProgressScreen
 import com.tatlib.app.ui.scanner.ScannerScreen
 import com.tatlib.app.ui.search.SearchScreen
-
-private data class BottomNavItem(
-    val route: String,
-    val label: String,
-    val icon: ImageVector
-)
-
-private val bottomNavItems = listOf(
-    BottomNavItem(Routes.LIBRARY, "Китапханә", Icons.Filled.AutoStories),
-    BottomNavItem(Routes.SEARCH, "Эзләү", Icons.Filled.Search),
-    BottomNavItem(Routes.SCANNER, "Скан", Icons.Filled.PhotoCamera),
-    BottomNavItem(Routes.PROGRESS, "Алгарыш", Icons.Filled.BarChart)
-)
 
 @Composable
 fun TatlibApp() {
@@ -60,32 +43,41 @@ fun TatlibApp() {
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
-    val showBottomBar = Routes.bottomBarRoutes.any { it == currentRoute }
+    val showBottomBar = currentRoute in Routes.bottomBarRoutes
 
+    // Мини-бар «Хәзер укыла»: книга с прогрессом, иначе первая (00-ux-map п. 7).
+    val books by appViewModel.books.collectAsState()
+    val currentBook = books.firstOrNull { it.progress > 0f } ?: books.firstOrNull()
+    val showMiniBar = currentRoute in Routes.miniBarRoutes && currentBook != null
+
+    // Экраны рисуются edge-to-edge (фото под статус-баром) и сами берут statusBarsPadding();
+    // системные отступы снизу здесь получает только нижняя навигация.
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
-                    bottomNavItems.forEach { item ->
-                        val selected = backStackEntry?.destination?.hierarchy
-                            ?.any { it.route == item.route } == true
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                if (!selected) {
-                                    navController.navigate(item.route) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                }
-                            },
-                            icon = { Icon(item.icon, contentDescription = item.label) },
-                            label = { Text(item.label) }
+                Column(modifier = Modifier.navigationBarsPadding()) {
+                    if (showMiniBar && currentBook != null) {
+                        MiniReadingBar(
+                            book = currentBook,
+                            onOpen = { navController.navigate(Routes.bookReader(currentBook.id)) },
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
                         )
                     }
+                    BottomNav(
+                        selectedRoute = currentRoute.orEmpty(),
+                        onSelect = { route ->
+                            if (route != currentRoute) {
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -123,21 +115,16 @@ fun TatlibApp() {
                 LibraryScreen(navController = navController, viewModel = appViewModel)
             }
             composable(Routes.SEARCH) {
-                SearchScreen(
-                    navController = navController,
-                    viewModel = appViewModel
-                )
+                SearchScreen(navController = navController, viewModel = appViewModel)
             }
             composable(Routes.PROGRESS) {
-                ProgressScreen(
-                    navController = navController,
-                    viewModel = appViewModel
-                )
+                ProgressScreen(navController = navController, viewModel = appViewModel)
+            }
+            composable(Routes.PROFILE) {
+                ProfileScreen(navController = navController, viewModel = appViewModel)
             }
             composable(Routes.SCANNER) {
-                ScannerScreen(
-                    navController = navController,
-                )
+                ScannerScreen(navController = navController)
             }
             composable(Routes.BOOK_DETAIL) { backStack ->
                 val bookId = backStack.arguments?.getString("bookId").orEmpty()
@@ -149,7 +136,7 @@ fun TatlibApp() {
             }
             composable(Routes.RECAP) { backStack ->
                 val bookId = backStack.arguments?.getString("bookId").orEmpty()
-                RecapScreen(navController = navController, bookId = bookId)
+                RecapScreen(navController = navController, viewModel = appViewModel, bookId = bookId)
             }
         }
     }
