@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tatlib</string>
+    <!-- Татарский — язык по умолчанию (values/), русский — values-ru/.
+         Строки экранов лежат в strings_<группа>.xml рядом. -->
+    <string name="app_name">TatLib</string>
 </resources>

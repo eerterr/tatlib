@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. UI itself is fully driven by Jetpack Compose (see ui/theme),
-         this XML theme only needs to exist for the manifest / pre-Compose window background. -->
+    <!-- UI целиком в Compose (ui/theme). XML-тема нужна манифесту и окну до первого кадра:
+         фон окна = background из MASTER.md § 2 (cream), чтобы не мигало белым. -->
     <style name="Theme.Tatlib" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/window_background</item>
     </style>
 </resources>

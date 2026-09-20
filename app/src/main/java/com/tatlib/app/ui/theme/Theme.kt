@@ -1,64 +1,112 @@
 package com.tatlib.app.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.unit.sp
 
+// MASTER.md § 2.1 — роли M3 для светлой темы.
 private val LightColors = lightColorScheme(
-    primary = InkGreen,
-    onPrimary = Ivory,
-    primaryContainer = MossGreen,
-    onPrimaryContainer = InkGreen,
-    secondary = Sunset,
-    onSecondary = Ivory,
-    secondaryContainer = SunsetSoft,
-    onSecondaryContainer = SunsetDeep,
+    primary = Ink,
+    onPrimary = Cream,
+    primaryContainer = SageContainer,
+    onPrimaryContainer = Ink,
+    secondary = Forest,
+    onSecondary = Cream,
+    secondaryContainer = Sage,
+    onSecondaryContainer = Ink,
+    tertiary = Terracotta,
+    onTertiary = White,
+    tertiaryContainer = Peach,
+    onTertiaryContainer = Ink,
     background = Cream,
-    onBackground = TextPrimary,
-    surface = Ivory,
-    onSurface = TextPrimary,
+    onBackground = Ink,
+    surface = Paper,
+    onSurface = Ink,
     surfaceVariant = Sand,
-    onSurfaceVariant = TextSecondary,
-    outline = Divider,
-    error = ErrorRed,
-    onError = Ivory
+    onSurfaceVariant = InkSoft,
+    surfaceContainerHighest = SandDeep,
+    surfaceContainerHigh = Sand,
+    surfaceContainer = Paper,
+    surfaceContainerLow = Paper,
+    surfaceContainerLowest = Paper,
+    outline = InkMuted,
+    outlineVariant = Line,
+    error = ErrorLight,
+    onError = White,
+    scrim = Ink
 )
 
-// The prototype is designed cream-first; dark mode reuses the same warm palette
-// pushed a shade darker so screenshots stay legible without a full second pass.
+// MASTER.md § 2.2 — отдельная тёмная схема (глубокая зелень, не серый и не сдвиг светлой).
 private val DarkColors = darkColorScheme(
-    primary = SageGreen,
-    onPrimary = InkGreen,
-    primaryContainer = ForestGreen,
-    onPrimaryContainer = MossGreen,
-    secondary = Sunset,
-    onSecondary = InkGreen,
-    secondaryContainer = SunsetDeep,
-    onSecondaryContainer = SunsetSoft,
-    background = Color(0xFF14201C),
-    onBackground = Cream,
-    surface = Color(0xFF1C2B26),
-    onSurface = Cream,
-    surfaceVariant = Color(0xFF25352F),
-    onSurfaceVariant = Color(0xFFC4CFC7),
-    outline = Color(0xFF3B4A43),
-    error = ErrorRed,
-    onError = Ivory
+    primary = SageLight,
+    onPrimary = Night,
+    primaryContainer = NightSageContainer,
+    onPrimaryContainer = SageContainer,
+    secondary = SageLight,
+    onSecondary = Night,
+    secondaryContainer = NightSageContainer,
+    onSecondaryContainer = CreamText,
+    tertiary = TerracottaLight,
+    onTertiary = Night,
+    tertiaryContainer = NightPeach,
+    onTertiaryContainer = NightPeachText,
+    background = Night,
+    onBackground = CreamText,
+    surface = NightPaper,
+    onSurface = CreamText,
+    surfaceVariant = NightSand,
+    onSurfaceVariant = NightInkSoft,
+    surfaceContainerHighest = NightSandDeep,
+    surfaceContainerHigh = NightSand,
+    surfaceContainer = NightPaper,
+    surfaceContainerLow = NightPaper,
+    surfaceContainerLowest = Night,
+    outline = NightInkMuted,
+    outlineVariant = NightLine,
+    error = ErrorDark,
+    onError = Night,
+    scrim = Night
 )
+
+/** Расширенные токены проекта: `MaterialTheme.tatlibColors.peach2` и т. д. */
+val MaterialTheme.tatlibColors: TatlibColors
+    @Composable @ReadOnlyComposable get() = LocalTatlibColors.current
+
+/** Типографика ридера с учётом настроек пользователя. */
+val MaterialTheme.readerTypography: ReaderTypography
+    @Composable @ReadOnlyComposable get() = LocalReaderTypography.current
 
 @Composable
 fun TatlibTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = when (AppPreferences.themeMode) {
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    },
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColors else LightColors
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        shapes = AppShapes,
-        content = content
+    val colorScheme: ColorScheme = if (darkTheme) DarkColors else LightColors
+    val extended = if (darkTheme) DarkTatlibColors else LightTatlibColors
+    val reader = ReaderTypography(
+        fontSize = AppPreferences.readerFontSizeSp
+            .coerceIn(ReaderTypography.MIN_SP, ReaderTypography.MAX_SP).sp,
+        font = AppPreferences.readerFont
     )
+    CompositionLocalProvider(
+        LocalTatlibColors provides extended,
+        LocalReaderTypography provides reader
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            shapes = AppShapes,
+            content = content
+        )
+    }
 }

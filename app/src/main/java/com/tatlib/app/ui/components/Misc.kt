@@ -23,20 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tatlib.app.data.TatarLevel
-import com.tatlib.app.ui.theme.LevelA1
-import com.tatlib.app.ui.theme.LevelA2
-import com.tatlib.app.ui.theme.LevelB1
-import com.tatlib.app.ui.theme.LevelB2
-import com.tatlib.app.ui.theme.LevelC1
+import com.tatlib.app.ui.theme.LightTatlibColors
 import com.tatlib.app.ui.theme.PillShape
 
-fun colorForLevel(level: TatarLevel): Color = when (level) {
-    TatarLevel.A1 -> LevelA1
-    TatarLevel.A2 -> LevelA2
-    TatarLevel.B1 -> LevelB1
-    TatarLevel.B2 -> LevelB2
-    TatarLevel.C1 -> LevelC1
-}
+// Временная связка со старыми экранами до шага 4.2 (там LevelChip берёт цвета из темы).
+fun colorForLevel(level: TatarLevel): Color = LightTatlibColors.level(level).dot
 
 @Composable
 fun LevelBadge(level: TatarLevel, modifier: Modifier = Modifier) {
