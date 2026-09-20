@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Welcome по-русски — из WelcomeRu.dc.html; остальное — перевод татарских строк values/. -->
+
+    <string name="splash_tagline">Больше по-татарски</string>
+
+    <string name="welcome_title">Изучай татарский легко</string>
+    <string name="welcome_subtitle">Язык объединяет людей и открывает новые горизонты</string>
+    <string name="welcome_start">Начать</string>
+    <string name="welcome_trends">Тренды</string>
+
+    <string name="auth_title">У вас есть учётная запись?</string>
+    <string name="auth_text">Чтобы продолжить, войдите или создайте новую учётную запись.</string>
+    <string name="auth_login">Войти</string>
+    <string name="auth_register">Зарегистрироваться</string>
+
+    <string name="register_title">Регистрация</string>
+    <string name="register_name">Имя</string>
+    <string name="register_contact">Номер телефона / электронная почта</string>
+    <string name="field_password">Пароль</string>
+    <string name="register_password_repeat">Повторите пароль</string>
+    <string name="register_password_mismatch">Пароли не совпадают</string>
+    <string name="register_continue">Продолжить</string>
+
+    <string name="login_title">Вход</string>
+    <string name="login_contact">Телефон или электронная почта</string>
+    <string name="login_no_account">Нет учётной записи — регистрация</string>
+</resources>
