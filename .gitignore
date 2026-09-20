@@ -11,3 +11,6 @@ local.properties
 /app/build/
 /app/release/
 *.hprof
+
+# worktree субагентов Claude Code
+.claude/worktrees/

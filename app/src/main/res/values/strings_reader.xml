@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Группа D: ридер, итог сессии, сканер — дословно из docs/design/mockups/*.dc.html
+         (Reader*, Recap, Scanner*), подписи листа шрифта — из Profile.dc.html.
+         Общие строки (layer_*, action_*) — в strings_components.xml. -->
+
+    <!-- Ридер -->
+    <string name="reader_font_settings">Шрифт көйләүләре</string>
+    <string name="reader_loading">Китап йөкләнә…</string>
+    <string name="reader_no_text">Текст табылмады</string>
+    <!-- «Оригинал · 1 бүлек · Шүрәле, 1907»: слой · страница · название, год -->
+    <string name="reader_layer_caption">%1$s · %2$d бүлек · %3$s, %4$s</string>
+    <!-- «1 бүлек · 929 сүз» -->
+    <string name="reader_page_counter">%1$d бүлек · %2$s сүз</string>
+    <string name="reader_prev">← Артка</string>
+    <string name="reader_next">Алга →</string>
+    <string name="reader_finish">Тәмамлау</string>
+    <string name="reader_translating">Тәрҗемә…</string>
+    <string name="reader_translation_missing">Тәрҗемә табылмады</string>
+
+    <!-- Лист настроек шрифта (подписи из Profile.dc.html) -->
+    <string name="reader_font_label">Ридер шрифты</string>
+    <string name="reader_font_literata" translatable="false">Literata</string>
+    <string name="reader_font_golos" translatable="false">Golos</string>
+    <string name="reader_font_size_label">Шрифт зурлыгы</string>
+    <string name="reader_font_size_hint">%1$d sp · 16–20</string>
+    <string name="reader_theme_label">Тема</string>
+    <string name="reader_theme_system">Система</string>
+    <string name="reader_theme_light">Якты</string>
+    <string name="reader_theme_dark">Караңгы</string>
+
+    <!-- Итог сессии (Recap) -->
+    <string name="recap_title">Һәр укылган бит сине оригиналга якынайта!</string>
+    <string name="recap_stat_pages">бит</string>
+    <string name="recap_stat_words">яңа сүз</string>
+    <string name="recap_stat_original">оригинал</string>
+    <string name="recap_card_title">Уку — үсеш</string>
+    <string name="recap_card_text">Беренче сессия әле язылмаган: укуны тәмамлагач, битләр һәм яңа сүзләр монда күренер.</string>
+    <string name="recap_back_to_library">Китапханәгә кайту</string>
+
+    <!-- Сканер -->
+    <string name="scanner_gallery">Галерея</string>
+    <string name="scanner_camera">Камера</string>
+    <string name="scanner_start_title">Камераны китапка яки биткә юнәлтегез</string>
+    <string name="scanner_start_hint">Без текстны табып, аны уку өчен әзерләячәкбез.</string>
+    <string name="scanner_busy_title">Текст таныла…</string>
+    <string name="scanner_busy_engine" translatable="false">tat_cyrl · Tesseract</string>
+    <string name="scanner_busy_hint">Бит базадагы дүрт китап белән чагыштырыла.</string>
+    <string name="scanner_stop">Туктату</string>
+    <string name="scanner_text_title">Танылган текст</string>
+    <string name="scanner_complexity">Катлаулылык</string>
+    <!-- «Оригинал · фотодан танылган өзек» -->
+    <string name="scanner_layer_caption">%1$s · фотодан танылган өзек</string>
+    <string name="scanner_book_found">Китап табылды</string>
+    <!-- «Су анасы · Габдулла Тукай» -->
+    <string name="scanner_book_title_author">%1$s · %2$s</string>
+    <string name="scanner_book_in_base">тулы версиясе базада бар</string>
+    <!-- «Габдулла Тукай · 1908» -->
+    <string name="scanner_sheet_author_year">%1$s · %2$s</string>
+    <!-- «413 сүз · 28 бүлек» -->
+    <string name="scanner_sheet_stats">%1$s сүз · %2$s бүлек</string>
+    <string name="scanner_sheet_text">Тулы версиясен өч катламда укый аласыз.</string>
+    <string name="scanner_sheet_read">Тулы версиясен укырга</string>
+    <string name="scanner_sheet_dismiss">Юк, өзекне генә укыйм</string>
+</resources>

@@ -1,0 +1,62 @@
+{
+ "query": "reading app for learning language, warm editorial, cream paper, calm serif, cultural literature, mobile",
+ "contextApplied": false,
+ "results": [
+  {
+   "name": "text effect",
+   "description": "A collection of animated greeting components featuring Samsung's distinctive angular design language with geometric letterforms, spring animations, and tech-forward styling. Includes both English and Vietnamese variants with futuristic accent elements. \n\nTechnical Features:\nSpring Animations: Variable stiffness (120-400) and damping (14-22) for realistic motion\n3D Effects: RotateX and rotateY transformations for depth\nGeometric Design: Square line caps and miter joins for sharp, tech-forward appearance\nStaggered Timing: Precise animation delays for dramatic sequential reveals\nColor Accents: Samsung-brand blue and cyan highlights\nBlur Effects: Smooth focus transitions on accent elements\nDesign Philosophy:\nAngular Aesthetic: Sharp corners and geometric shapes reflecting Samsung's innovation focus\nTech-Forward: Futuristic elements like corner brackets and accent lines\nBrand Identity: Distinct from organic Apple design with bold, industrial styling\nScalable: Responsive SVG design that works at any size\nAccessible: Semantic titles and proper motion handling\nUsage Examples:\nLanding page hero animations\nBrand identity presentations\nLoading screens with personality\nInteractive greeting experiences\nMultilingual applications\nTech product launches",
+   "author": "dhileepkumargm",
+   "url": "https://21st.dev/@dhileepkumargm/components/text-effect",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/dhileepkumargm/text-effect?api_key=$API_KEY_21ST\""
+  },
+  {
+   "name": "Blog Cards",
+   "description": "Minimal, text-focused preview of a journal or blog entry.\nIt typically includes a title, publication date, and short description, styled with subtle hover animations and a dashed separator for a clean, editorial aesthetic.",
+   "author": "sumonadotwork",
+   "url": "https://21st.dev/@sumonadotwork/components/blog-cards",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/sumonadotwork/blog-cards?api_key=$API_KEY_21ST\""
+  },
+  {
+   "name": "Editorial Collage Hero",
+   "description": "A two-column hero section with a serif headline, description, call-to-action buttons, and a layered collage of two overlapping images over a soft background wash.",
+   "author": "felipemenezes098",
+   "url": "https://21st.dev/@felipemenezes098/components/hero-04",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/felipemenezes098/hero-04?api_key=$API_KEY_21ST\""
+  },
+  {
+   "name": "Book",
+   "description": "A responsive book component.",
+   "author": "shugar",
+   "url": "https://21st.dev/@shugar/components/book",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/shugar/book?api_key=$API_KEY_21ST\""
+  },
+  {
+   "name": "Scroll Burn Text",
+   "description": "A manifesto that comes at the reader and burns off. Each block grows toward the lens, splits into red and cyan at the edges and is eaten away glyph by glyph from the middle out, uncovering the next block standing behind it.",
+   "author": "ruixen.ui",
+   "url": "https://21st.dev/@ruixen.ui/components/scroll-burn-text",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/ruixen.ui/scroll-burn-text?api_key=$API_KEY_21ST\""
+  },
+  {
+   "name": "Editorial Testimonial",
+   "description": "An editorial-style testimonial with a bold typographic.",
+   "author": "jatin-yadav05",
+   "url": "https://21st.dev/@jatin-yadav05/components/editorial-testimonial",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/jatin-yadav05/editorial-testimonial?api_key=$API_KEY_21ST\""
+  },
+  {
+   "name": "Typing Text",
+   "description": "Multi-line terminal-style typewriter with sequential, cascade, and loop variants, configurable cursor styles, blur/rotate/scale entrance, and RTL support. Theme-aware, respects reduced motion.",
+   "author": "hyperiux",
+   "url": "https://21st.dev/@hyperiux/components/typing-text",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/hyperiux/typing-text?api_key=$API_KEY_21ST\""
+  },
+  {
+   "name": "Glow Text Reveal",
+   "description": "",
+   "author": "hyperiux",
+   "url": "https://21st.dev/@hyperiux/components/glowing-text",
+   "installCommand": "npx shadcn@latest add \"https://21st.dev/r/hyperiux/glowing-text?api_key=$API_KEY_21ST\""
+  }
+ ]
+}

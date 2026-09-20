@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Группа A: Splash, Welcome, AuthChoice, Register, Login — дословно из docs/design/mockups/*.dc.html. -->
+
+    <!-- Splash (Main.dc.html) -->
+    <string name="splash_tagline">Татарча күбрәк</string>
+
+    <!-- Welcome -->
+    <string name="welcome_title">Рәхим итегез!</string>
+    <string name="welcome_subtitle">Телне белү — дөньяны башкача күрү</string>
+    <string name="welcome_start">Башлау</string>
+    <string name="welcome_trends">Трендлар</string>
+
+    <!-- AuthChoice -->
+    <string name="auth_title">Сездә исәп язмасы бармы?</string>
+    <string name="auth_text">Дәвам итү өчен керегез яки яңа хисап ачыгыз.</string>
+    <string name="auth_login">Керү</string>
+    <string name="auth_register">Теркәлү</string>
+
+    <!-- Register -->
+    <string name="register_title">Теркәлү</string>
+    <string name="register_name">Исем</string>
+    <string name="register_contact">Телефон номеры / электрон почта</string>
+    <string name="field_password">Серсүз</string>
+    <string name="register_password_repeat">Серсүзне кабатлагыз</string>
+    <string name="register_password_mismatch">Серсүзләр туры килми</string>
+    <string name="register_age_10_14" translatable="false">10–14</string>
+    <string name="register_age_14_18" translatable="false">14–18</string>
+    <string name="register_age_18_25" translatable="false">18–25</string>
+    <string name="register_age_25" translatable="false">25+</string>
+    <string name="register_continue">Дәвам итү</string>
+
+    <!-- Login -->
+    <string name="login_title">Керү</string>
+    <string name="login_contact">Телефон яки электрон почта</string>
+    <string name="login_no_account">Исәп язмасы юк — теркәлү</string>
+</resources>

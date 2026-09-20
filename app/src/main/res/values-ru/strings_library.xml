@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Главная -->
+    <string name="library_greeting_morning">Доброе утро!</string>
+    <string name="library_greeting_day">Добрый день!</string>
+    <string name="library_greeting_evening">Добрый вечер!</string>
+    <string name="library_continue_question">Продолжим чтение?</string>
+    <string name="library_continue">Продолжить чтение</string>
+    <string name="library_trends">Тренды</string>
+    <string name="library_filter_tales">Сказки</string>
+    <string name="library_filter_stories">Рассказы</string>
+    <string name="library_filter_tukay">Тукай</string>
+    <string name="library_my_books">Мои книги</string>
+    <string name="library_recommended">Рекомендуем</string>
+    <string name="cd_profile">Профиль</string>
+    <string name="library_loading">Книги загружаются…</string>
+    <string name="library_load_failed">Не удалось загрузить книги</string>
+    <string name="library_retry">Повторить</string>
+    <string name="library_empty">Книг нет</string>
+
+    <!-- Поиск -->
+    <string name="search_placeholder">Книга, автор или тема…</string>
+    <string name="search_tile_level">Мой уровень %1$s</string>
+    <plurals name="search_books_count">
+        <item quantity="one">%1$d книга</item>
+        <item quantity="few">%1$d книги</item>
+        <item quantity="many">%1$d книг</item>
+        <item quantity="other">%1$d книги</item>
+    </plurals>
+    <string name="search_all_books">Все книги</string>
+    <string name="search_nothing_found">Ничего не найдено</string>
+    <string name="genre_tale">сказка в стихах</string>
+    <string name="genre_story">рассказ</string>
+
+    <!-- Страница книги -->
+    <string name="book_stat_words">слов</string>
+    <string name="book_stat_unique_words">уникальных слов</string>
+    <string name="book_stat_blocks">разделов</string>
+    <string name="book_description_caption">Адаптированный текст первого раздела</string>
+    <string name="book_loading">Книга загружается…</string>
+    <string name="book_not_found">Книга не найдена</string>
+</resources>

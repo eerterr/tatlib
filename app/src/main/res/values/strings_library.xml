@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Группа C: главная, поиск, страница книги — дословно из Library*/Search/BookDetail.dc.html.
+         Общие строки (nav_search «Эзләү», action_all «Барысы», action_read «Укырга») — в strings_components.xml. -->
+
+    <!-- Главная (library) -->
+    <string name="library_greeting_morning">Хәерле иртә!</string>
+    <string name="library_greeting_day">Хәерле көн!</string>
+    <string name="library_greeting_evening">Хәерле кич!</string>
+    <string name="library_continue_question">Укуны дәвам итәбезме?</string>
+    <string name="library_continue">Укуны дәвам итү</string>
+    <string name="library_trends">Трендлар</string>
+    <string name="library_filter_tales">Әкиятләр</string>
+    <string name="library_filter_stories">Хикәяләр</string>
+    <string name="library_filter_tukay">Тукай</string>
+    <string name="library_my_books">Минем китапларым</string>
+    <string name="library_recommended">Тәкъдим итәбез</string>
+    <string name="cd_profile">Профиль</string>
+    <!-- Состояния загрузки — из прежнего LibraryScreen (в макете их нет) -->
+    <string name="library_loading">Китаплар йөкләнә…</string>
+    <string name="library_load_failed">Китапларны йөкләп булмады</string>
+    <string name="library_retry">Кабатлап карау</string>
+    <string name="library_empty">Китаплар юк</string>
+
+    <!-- Поиск (search) -->
+    <string name="search_placeholder">Китап, автор яки тема…</string>
+    <string name="search_tile_level">Дәрәҗәм %1$s</string>
+    <plurals name="search_books_count">
+        <item quantity="one">%1$d китап</item>
+        <item quantity="other">%1$d китап</item>
+    </plurals>
+    <string name="search_all_books">Барлык китаплар</string>
+    <string name="search_nothing_found">Бернәрсә дә табылмады</string>
+    <!-- Жанры из API приходят по-русски; в интерфейсе — по-татарски (row() в gen2.py) -->
+    <string name="genre_tale">шигъри әкият</string>
+    <string name="genre_story">хикәя</string>
+
+    <!-- Страница книги (book detail) -->
+    <string name="book_stat_words">сүз</string>
+    <string name="book_stat_unique_words">уникаль сүз</string>
+    <string name="book_stat_blocks">бүлек</string>
+    <string name="book_description_caption">Беренче бүлекнең адаптацияләнгән тексты</string>
+    <!-- Состояния — из прежнего BookDetailScreen -->
+    <string name="book_loading">Китап йөкләнә…</string>
+    <string name="book_not_found">Китап табылмады</string>
+
+    <!-- Разделитель метаданных « · » (одинаков в обоих языках) -->
+    <string name="meta_pair" translatable="false">%1$s · %2$s</string>
+    <string name="meta_triple" translatable="false">%1$s · %2$s · %3$s</string>
+</resources>

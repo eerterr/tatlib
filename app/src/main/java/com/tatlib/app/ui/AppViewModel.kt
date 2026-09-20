@@ -290,8 +290,8 @@ class AppViewModel : ViewModel() {
 
             } catch (e: Exception) {
 
-                _selectedWordTranslation.value =
-                    "Тәрҗемә табылмады"
+                // null → UI показывает ресурс reader_translation_missing (tt/ru)
+                _selectedWordTranslation.value = null
 
             } finally {
 

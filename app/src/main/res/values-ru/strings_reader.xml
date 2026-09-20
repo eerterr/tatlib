@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ридер -->
+    <string name="reader_font_settings">Настройки шрифта</string>
+    <string name="reader_loading">Книга загружается…</string>
+    <string name="reader_no_text">Текст не найден</string>
+    <string name="reader_layer_caption">%1$s · %2$d глава · %3$s, %4$s</string>
+    <string name="reader_page_counter">%1$d глава · %2$s слов</string>
+    <string name="reader_prev">← Назад</string>
+    <string name="reader_next">Далее →</string>
+    <string name="reader_finish">Завершить</string>
+    <string name="reader_translating">Перевод…</string>
+    <string name="reader_translation_missing">Перевод не найден</string>
+
+    <!-- Лист настроек шрифта -->
+    <string name="reader_font_label">Шрифт ридера</string>
+    <string name="reader_font_size_label">Размер шрифта</string>
+    <string name="reader_font_size_hint">%1$d sp · 16–20</string>
+    <string name="reader_theme_label">Тема</string>
+    <string name="reader_theme_system">Система</string>
+    <string name="reader_theme_light">Светлая</string>
+    <string name="reader_theme_dark">Тёмная</string>
+
+    <!-- Итог сессии (Recap) -->
+    <string name="recap_title">Каждая прочитанная страница приближает тебя к оригиналу!</string>
+    <string name="recap_stat_pages">страниц</string>
+    <string name="recap_stat_words">новых слов</string>
+    <string name="recap_stat_original">оригинал</string>
+    <string name="recap_card_title">Чтение — рост</string>
+    <string name="recap_card_text">Первая сессия ещё не записана: после завершения чтения страницы и новые слова появятся здесь.</string>
+    <string name="recap_back_to_library">Вернуться в библиотеку</string>
+
+    <!-- Сканер -->
+    <string name="scanner_gallery">Галерея</string>
+    <string name="scanner_camera">Камера</string>
+    <string name="scanner_start_title">Наведите камеру на книгу или страницу</string>
+    <string name="scanner_start_hint">Мы найдём текст и подготовим его для чтения.</string>
+    <string name="scanner_busy_title">Распознаём текст…</string>
+    <string name="scanner_busy_hint">Страница сравнивается с четырьмя книгами в базе.</string>
+    <string name="scanner_stop">Остановить</string>
+    <string name="scanner_text_title">Распознанный текст</string>
+    <string name="scanner_complexity">Сложность</string>
+    <string name="scanner_layer_caption">%1$s · отрывок, распознанный с фото</string>
+    <string name="scanner_book_found">Книга найдена</string>
+    <string name="scanner_book_title_author">%1$s · %2$s</string>
+    <string name="scanner_book_in_base">полная версия есть в базе</string>
+    <string name="scanner_sheet_author_year">%1$s · %2$s</string>
+    <string name="scanner_sheet_stats">%1$s слов · %2$s глав</string>
+    <string name="scanner_sheet_text">Полную версию можно читать в трёх слоях.</string>
+    <string name="scanner_sheet_read">Читать полную версию</string>
+    <string name="scanner_sheet_dismiss">Нет, прочитаю только отрывок</string>
+</resources>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Группа B: тест уровня (LevelIntro, Quiz, LevelResult), «Алгарышың», «Профиль».
+         Тексты дословно из docs/design/mockups/*.dc.html. Оверлайны (labelSmall) экраны переводят
+         в прописные сами (.uppercase()), как CSS .ov. -->
+
+    <!-- LevelIntro -->
+    <string name="level_intro_title">Сезнең дәрәҗәгезне билгелибезме?</string>
+    <string name="level_intro_text">Татар телен ни дәрәҗәдә белүегезне ачыклагыз.</string>
+    <string name="level_intro_take_test">Тест узарга</string>
+    <string name="level_intro_self">Үзем күрсәтермен</string>
+
+    <!-- Quiz -->
+    <string name="quiz_counter">Сорау %1$d / %2$d</string>
+    <string name="quiz_title">Дәрәҗәгезне билгелик</string>
+    <string name="quiz_finish">Тәмамлау</string>
+    <string name="quiz_empty">Тест сораулары юк</string>
+
+    <!-- LevelResult -->
+    <string name="level_result_title">Сезнең татар теле дәрәҗәсе</string>
+    <string name="level_result_hint">Дәрәҗәгезне төзәтергә телисез икән, теләгән хәрефкә басыгыз.</string>
+    <string name="level_result_continue">Дәвам итү</string>
+    <string name="level_result_unknown">Татар телен белмим</string>
+
+    <!-- Progress («Алгарышың») -->
+    <string name="progress_title">Алгарышың</string>
+    <string name="progress_period_week">Атна</string>
+    <string name="progress_period_month">Ай</string>
+    <string name="progress_period_year">Ел</string>
+    <string name="progress_current_level">Хәзерге дәрәҗәң</string>
+    <string name="progress_level_line">%1$s · Урта</string>
+    <string name="progress_next_hint">Тагын бераз — һәм B2 дәрәҗәсен сынап карарга була.</string>
+    <string name="progress_stat_translations">тәрҗемә</string>
+    <string name="progress_stat_unique">уникаль сүз</string>
+    <string name="progress_stat_days">актив көн</string>
+    <string name="progress_this_week">Бу атна</string>
+    <string-array name="progress_week_days">
+        <item>Дш</item>
+        <item>Сш</item>
+        <item>Чш</item>
+        <item>Пҗ</item>
+        <item>Җм</item>
+        <item>Шм</item>
+        <item>Як</item>
+    </string-array>
+    <!-- Строка из text_blocks «Шүрәле» — цитата в оригинале, не переводится (00-ux-map п. 18). -->
+    <string name="progress_phrase" translatable="false">Нәкъ Казан артында бардыр бер авыл — «Кырлай» диләр</string>
+    <string name="progress_phrase_source">Шүрәле · Габдулла Тукай, 1907</string>
+    <string name="progress_recent">Соңгы тәрҗемәләр</string>
+    <string name="progress_empty_title">Әлегә мәгълүмат юк</string>
+
+    <!-- Profile -->
+    <string name="profile_name">Укучы</string>
+    <string name="profile_age">%1$d яшь</string>
+    <string name="profile_language">Интерфейс теле</string>
+    <string name="profile_language_sub">Татарча төп, русча күчерү</string>
+    <string name="profile_theme">Тема</string>
+    <string name="profile_theme_system">Система</string>
+    <string name="profile_theme_light">Якты</string>
+    <string name="profile_theme_dark">Караңгы</string>
+    <string name="profile_reader_font">Ридер шрифты</string>
+    <string name="profile_font_literata" translatable="false">Literata</string>
+    <string name="profile_font_golos" translatable="false">Golos</string>
+    <string name="profile_font_size">Шрифт зурлыгы</string>
+    <string name="profile_font_size_value">%1$d sp · 16–20</string>
+    <string name="profile_underline">Сүз асты сызыгы</string>
+    <string name="profile_underline_sub">Дәрәҗәдән югары сүзләрне билгеләү</string>
+    <string name="profile_logout">Чыгу</string>
+</resources>
