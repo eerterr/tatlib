@@ -291,9 +291,12 @@ private fun ReaderText(
         ReaderPiece(annotated, 0, underline, tapEnabled, onTap)
         if (split != null) popup()
     } else {
+        // Перенос строки после строки слова не переносим во вторую часть — иначе пустая строка под карточкой.
+        var after = split
+        while (after < annotated.length && annotated[after] == '\n') after++
         ReaderPiece(annotated.subSequence(0, split), 0, underline, tapEnabled, onTap)
         popup()
-        ReaderPiece(annotated.subSequence(split, annotated.length), split, underline, tapEnabled, onTap)
+        ReaderPiece(annotated.subSequence(after, annotated.length), after, underline, tapEnabled, onTap)
     }
 }
 
@@ -363,7 +366,8 @@ private fun buildWordAnnotatedString(
         if (part.all { it.isWhitespace() }) {
             append(part)
         } else {
-            pushStringAnnotation(tag = WORD_TAG, annotation = part.trim())
+            // В API и во всплывашку — слово без кавычек и знаков препинания по краям («Кырлай», → Кырлай).
+            pushStringAnnotation(tag = WORD_TAG, annotation = part.trim { !it.isLetterOrDigit() }.ifEmpty { part.trim() })
             if (highlight != null && match.range.first == highlight.start) {
                 withStyle(SpanStyle(background = highlightColor)) { append(part) }
             } else {

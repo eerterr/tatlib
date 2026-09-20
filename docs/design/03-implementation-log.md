@@ -113,3 +113,10 @@
 - Плитки «Әкиятләр»/«Хикәяләр» на «Эзләү» брали `forest`/`terracotta`, которые в тёмной теме светлеют (`#A9C79A`, `#E08A66`) — белый текст 1.85:1 / 2.63:1. В `tile()` цвета — литералы, не зависящие от темы → токены `tileForest #4E6B48`, `tileTerracotta #B4522E` одинаковы в обеих схемах (как `tileSteel`/`tileHoney`).
 - Мини-бар «Хәзер укыла» лежал в `bottomBar` Scaffold и входил в `innerPadding` — выглядел второй полкой навигации, а не плавающим плеером (`.mini` position:absolute, bottom 88). Вынесен в `Box` поверх `NavHost` (`align(BottomCenter)`, 12/12/8); Library и Search оставляют 72 dp снизу.
 - У полей `GlassField`/`PlainField` не было состояния фокуса (`.field.focus` 2 dp forest, MASTER § 7.10) — добавлен `MutableInteractionSource` + `collectIsFocusedAsState`: рамка 2 dp `colorScheme.secondary` при фокусе.
+
+## После сборки на эмуляторе (по команде владельца поставлены JDK 17 и Android SDK)
+
+- `./gradlew clean assembleDebug` — BUILD SUCCESSFUL, 0 ошибок; `gradlew` получил бит исполнения (закоммичен).
+- Ридер: слово для API и всплывашки — без кавычек/знаков препинания по краям (`trim { !it.isLetterOrDigit() }`), раньше уходило «Кырлай» с кавычками (как и в старом коде).
+- Ридер: перенос строки после строки слова не переносится во вторую часть текста — иначе под карточкой была пустая строка.
+- Скриншоты — `docs/design/screenshots/{light,dark}/*.jpg` (JPEG q85 вместо PNG: 35 МБ → 7 МБ).
