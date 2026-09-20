@@ -44,3 +44,20 @@
 - `GlassCard`/`GlassField`: без `Modifier.blur` (API 31+), заливка 34 % + рамка 55 % — по решению § 2.1 промта.
 - `BookCover`: id «1/2/3» → фото из drawable, любой другой id → типографическая обложка на `hero_sunset` (масштаб кегля от ширины через `LocalDensity`, не sp).
 - `TextLink`/`LanguageToggle`: подчёркивание рисуется `drawBehind` по нижней кромке текстового бокса (цвет `sage`/terracotta отличается от текста, `TextDecoration.Underline` не подходит).
+
+## Шаг 4.3 — экраны
+
+### Группа A — Splash, Welcome, AuthChoice, Register, Login (коммит 4e24894)
+
+- Позиция фото `center 30/40/35 %` → `BiasAlignment(0f, −0.4/−0.2/−0.3)` (у `Alignment` нет фабрики с числами).
+- Welcome RU: отдельного экрана нет — тексты `WelcomeRu.dc.html` лежат в `values-ru` и берутся по локали системы; TAT/RU — локальное состояние, визуальный no-op (00-ux-map п. 21), то же на AuthChoice/Register/Login.
+- «Трендлар» на Welcome — `onClick = {}`: в макете ссылка ведёт в никуда.
+- `OnPhotoLink` имеет внутренний отступ 16 dp → на Welcome `offset(x = 16.dp)`, на Login `offset(x = −16.dp)`, чтобы текст стоял у края как в макете.
+- AuthChoice «Теркәлү»: `ActionButton(Secondary)` даёт подпись ink → private `SecondaryOnPhotoAction` (круг sky2 + узор, подпись белая с тенью), без `pressScale` (он `internal` в components).
+- AuthChoice градиент `rgba(255,255,255,.1)` → `onPhoto.copy(.1f)`; Register/Login без градиента — `SolidColor(scrim.copy(alpha = 0f))`.
+- `ActionButton` без `enabled` → валидация старого кода сохранена как guard в `onClick` + `alpha(0.5f)` при невалидной форме.
+- Register: убраны подпись «Сезнең яшь» и старая кнопка (их нет в макете); чипы возраста с en dash из макета, `translatable="false"`; выбор — локальное состояние.
+- Login: плейсхолдер «Логин» → «Телефон яки электрон почта» из макета.
+- Поля пароля: «глаз» рабочий (Visibility/VisibilityOff), в макете статичный.
+- Ошибка «Серсүзләр туры килми» — `bodySmall` `error` под полем повтора (RU «Пароли не совпадают»).
+- Register/Login: `imePadding()` + скролл, кнопка остаётся над клавиатурой.
