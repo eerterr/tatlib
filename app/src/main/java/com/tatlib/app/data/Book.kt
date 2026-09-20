@@ -1,8 +1,12 @@
 package com.tatlib.app.data
 
-/** CEFR-style reading level used across the app to badge books and the user's own level. */
+/** CEFR-style reading level used across the app. */
 enum class TatarLevel(val label: String) {
-    A1("A1"), A2("A2"), B1("B1"), B2("B2"), C1("C1")
+    A1("A1"),
+    A2("A2"),
+    B1("B1"),
+    B2("B2"),
+    C1("C1")
 }
 
 data class GlossWord(
@@ -11,11 +15,23 @@ data class GlossWord(
 )
 
 data class BookPage(
+    /** Original Tatar text. */
     val bodyText: String,
-    /** Words on this page that should be tappable, with their translation. */
+
+    /** Words on this page that can be tapped. */
     val glossary: List<GlossWord> = emptyList(),
-    /** A short phrase from this page highlighted as the "word of the page" card. */
-    val highlightPhrase: String? = null
+
+    /** Short highlighted phrase. */
+    val highlightPhrase: String? = null,
+
+    /** 100% difficulty — original Tatar text. */
+    val originalText: String = bodyText,
+
+    /** 50% difficulty — adapted Tatar text. */
+    val adaptedText: String = "",
+
+    /** 0% difficulty — Russian translation. */
+    val russianText: String = ""
 )
 
 data class Book(
@@ -29,8 +45,9 @@ data class Book(
     val description: String,
     val readingTimeLabel: String,
     val pages: List<BookPage>,
-    /** 0f..1f, how far the mock "current user" has already read into this book. */
+    /** 0f..1f — current reading progress. */
     val progress: Float = 0f
 ) {
-    val pageCount: Int get() = pages.size
+    val pageCount: Int
+        get() = pages.size
 }

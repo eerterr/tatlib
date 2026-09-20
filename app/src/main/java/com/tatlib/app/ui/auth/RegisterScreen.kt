@@ -3,6 +3,7 @@ package com.tatlib.app.ui.auth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,19 +30,32 @@ import com.tatlib.app.ui.components.ScreenTopBar
 import com.tatlib.app.ui.components.WideButton
 import com.tatlib.app.ui.navigation.Routes
 
-private val ageBrackets = listOf("10 - 14", "14 - 18", "18 - 25", "25+")
+private val ageBrackets = listOf(
+    "10 - 14",
+    "14 - 18",
+    "18 - 25",
+    "25+"
+)
 
 @Composable
-fun RegisterScreen(navController: NavHostController, viewModel: AppViewModel) {
+fun RegisterScreen(
+    navController: NavHostController,
+    viewModel: AppViewModel
+) {
     var name by remember { mutableStateOf("") }
     var contact by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordConfirm by remember { mutableStateOf("") }
-    var selectedAge by remember { mutableStateOf(viewModel.selectedAgeBracket ?: "18 - 25") }
+    var selectedAge by remember { mutableStateOf("18 - 25") }
 
-    val passwordsMismatch = passwordConfirm.isNotEmpty() && password != passwordConfirm
-    val canSubmit = name.isNotBlank() && contact.isNotBlank() &&
-        password.length >= 4 && !passwordsMismatch
+    val passwordsMismatch =
+        passwordConfirm.isNotEmpty() && password != passwordConfirm
+
+    val canSubmit =
+        name.isNotBlank() &&
+                contact.isNotBlank() &&
+                password.length >= 4 &&
+                !passwordsMismatch
 
     Column(
         modifier = Modifier
@@ -50,56 +64,91 @@ fun RegisterScreen(navController: NavHostController, viewModel: AppViewModel) {
             .padding(horizontal = 30.dp)
     ) {
         ScreenTopBar(
-            onBack = { navController.popBackStack() },
+            onBack = {
+                navController.popBackStack()
+            },
             showLanguageToggle = false,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            modifier = Modifier.padding(
+                top = 16.dp,
+                bottom = 8.dp
+            )
         )
 
         Text(
-            "Теркәлү",
+            text = "Теркәлү",
             style = MaterialTheme.typography.displayLarge,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(top = 12.dp, bottom = 28.dp)
+            modifier = Modifier.padding(
+                top = 12.dp,
+                bottom = 28.dp
+            )
         )
 
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Исем") },
+            label = {
+                Text("Исем")
+            },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        androidx.compose.foundation.layout.Spacer(Modifier.padding(top = 8.dp))
+
+        Spacer(
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
         OutlinedTextField(
             value = contact,
             onValueChange = { contact = it },
-            label = { Text("Телефон номеры / электрон почта") },
+            label = {
+                Text("Телефон номеры / электрон почта")
+            },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
         )
+
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Серсүз") },
+            label = {
+                Text("Серсүз")
+            },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
         )
+
         OutlinedTextField(
             value = passwordConfirm,
             onValueChange = { passwordConfirm = it },
-            label = { Text("Серсүзне кабатлагыз") },
+            label = {
+                Text("Серсүзне кабатлагыз")
+            },
             singleLine = true,
             isError = passwordsMismatch,
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
         )
+
         if (passwordsMismatch) {
             Text(
-                "Серсүзләр туры килми",
+                text = "Серсүзләр туры килми",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(top = 4.dp)
@@ -107,16 +156,24 @@ fun RegisterScreen(navController: NavHostController, viewModel: AppViewModel) {
         }
 
         Text(
-            "Сезнең яшь",
+            text = "Сезнең яшь",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(top = 24.dp, bottom = 10.dp)
+            modifier = Modifier.padding(
+                top = 24.dp,
+                bottom = 10.dp
+            )
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             ageBrackets.forEach { bracket ->
                 FilterChip(
                     text = bracket,
                     selected = selectedAge == bracket,
-                    onClick = { selectedAge = bracket }
+                    onClick = {
+                        selectedAge = bracket
+                    }
                 )
             }
         }
@@ -125,13 +182,22 @@ fun RegisterScreen(navController: NavHostController, viewModel: AppViewModel) {
             text = "Теркәлү",
             enabled = canSubmit,
             onClick = {
-                viewModel.selectedAgeBracket = selectedAge
-                viewModel.completeRegistration(name)
-                navController.navigate(Routes.LEVEL_INTRO)
+                // Пока регистрация локальная.
+                // Возраст сохраняем только внутри этого экрана.
+                // Реального backend-auth сейчас нет.
+
+                navController.navigate(Routes.LEVEL_INTRO) {
+                    popUpTo(Routes.REGISTER) {
+                        inclusive = true
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 32.dp, bottom = 32.dp)
+                .padding(
+                    top = 32.dp,
+                    bottom = 32.dp
+                )
         )
     }
 }

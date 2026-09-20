@@ -25,9 +25,13 @@ import com.tatlib.app.ui.components.WideButton
 import com.tatlib.app.ui.navigation.Routes
 
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: AppViewModel) {
+fun LoginScreen(
+    navController: NavHostController,
+    viewModel: AppViewModel
+) {
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     val canSubmit = login.isNotBlank() && password.isNotBlank()
 
     Column(
@@ -38,40 +42,60 @@ fun LoginScreen(navController: NavHostController, viewModel: AppViewModel) {
         ScreenTopBar(
             onBack = { navController.popBackStack() },
             showLanguageToggle = false,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            modifier = Modifier.padding(
+                top = 16.dp,
+                bottom = 8.dp
+            )
         )
 
         Text(
-            "Керү",
+            text = "Керү",
             style = MaterialTheme.typography.displayLarge,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(top = 12.dp, bottom = 28.dp)
+            modifier = Modifier.padding(
+                top = 12.dp,
+                bottom = 28.dp
+            )
         )
 
         OutlinedTextField(
             value = login,
             onValueChange = { login = it },
-            label = { Text("Логин") },
+            label = {
+                Text("Логин")
+            },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email
+            ),
             modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Серсүз") },
+            label = {
+                Text("Серсүз")
+            },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
         )
 
         WideButton(
             text = "Керү",
             enabled = canSubmit,
             onClick = {
-                viewModel.completeLogin()
-                navController.navigate(Routes.LEVEL_INTRO)
+                navController.navigate(Routes.LEVEL_INTRO) {
+                    popUpTo(Routes.LOGIN) {
+                        inclusive = true
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

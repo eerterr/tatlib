@@ -16,22 +16,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tatlib.app.ui.AppViewModel
+import com.tatlib.app.ui.components.AppLanguage
 import com.tatlib.app.ui.components.KazanSunsetHero
 import com.tatlib.app.ui.components.LanguageToggle
 import com.tatlib.app.ui.components.PrimaryButton
 import com.tatlib.app.ui.navigation.Routes
 
 @Composable
-fun WelcomeScreen(navController: NavHostController, viewModel: AppViewModel) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        KazanSunsetHero(modifier = Modifier.fillMaxWidth().height(340.dp))
+fun WelcomeScreen(
+    navController: NavHostController,
+    viewModel: AppViewModel
+) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
+        KazanSunsetHero(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(340.dp)
+        )
+
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            ) {
+
                 LanguageToggle(
-                    language = viewModel.language,
-                    onToggle = viewModel::toggleLanguage,
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    language = AppLanguage.TAT,
+                    onToggle = {},
+                    modifier = Modifier.align(
+                        Alignment.TopEnd
+                    )
                 )
             }
 
@@ -41,22 +62,34 @@ fun WelcomeScreen(navController: NavHostController, viewModel: AppViewModel) {
                     .padding(horizontal = 30.dp),
                 verticalArrangement = Arrangement.Bottom
             ) {
+
                 Text(
-                    "Рәхим итегез!",
+                    text = "Рәхим итегез!",
                     style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
                 )
+
                 Text(
-                    "Телне белү - дөньяны башкача күрү",
+                    text = "Телне белү - дөньяны башкача күрү",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(top = 12.dp, bottom = 36.dp)
+                    modifier = Modifier.padding(
+                        top = 12.dp,
+                        bottom = 36.dp
+                    )
                 )
+
                 PrimaryButton(
                     text = "Башлау",
-                    onClick = { navController.navigate(Routes.AUTH_CHOICE) },
-                    modifier = Modifier.padding(bottom = 40.dp)
+                    onClick = {
+                        navController.navigate(
+                            Routes.AUTH_CHOICE
+                        )
+                    },
+                    modifier = Modifier.padding(
+                        bottom = 40.dp
+                    )
                 )
             }
         }

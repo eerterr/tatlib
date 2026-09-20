@@ -1,176 +1,354 @@
 package com.tatlib.app.ui.scanner
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.tatlib.app.data.MockData
-import com.tatlib.app.ui.components.RoundBackButton
-import com.tatlib.app.ui.navigation.Routes
-import kotlinx.coroutines.delay
+import com.tatlib.app.AppContextHolder
+import com.tatlib.app.data.ApiClient
+import com.tatlib.app.data.OcrTranslateRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
-/**
- * Mock camera / OCR screen. There is no real CameraX or ML text-recognition wired up —
- * tapping the shutter just simulates "we recognised a page" and drops the user into a
- * book detail screen after a short delay, exactly where a real scan-and-match flow would
- * hand off once OCR + matching is implemented.
- */
 @Composable
-fun ScannerScreen(navController: NavHostController) {
-    var scanning by remember { mutableStateOf(false) }
+fun ScannerScreen(
+    navController: NavHostController
+) {
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(scanning) {
-        if (scanning) {
-            delay(1200)
-            navController.navigate(Routes.bookDetail(MockData.shurale.id)) {
-                popUpTo(Routes.SCANNER) { inclusive = true }
-            }
-        }
+    var isLoading by remember {
+        mutableStateOf(false)
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0F1E1A))
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            ScannerTopBar(navController)
+    var error by remember {
+        mutableStateOf<String?>(null)
+    }
 
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(30.dp)
-            ) {
-                ScannerFrame(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(0.9f)
-                        .align(Alignment.Center)
+    var recognizedText by remember {
+        mutableStateOf("")
+    }
+
+    var translatedText by remember {
+        mutableStateOf("")
+    }
+
+    var bookFound by remember {
+        mutableStateOf(false)
+    }
+
+    var bookId by remember {
+        mutableStateOf<Int?>(null)
+    }
+
+    var bookTitle by remember {
+        mutableStateOf<String?>(null)
+    }
+
+    // 0 = татарский оригинал
+    // 1 = русский перевод
+    var translationSlider by remember {
+        mutableStateOf(0f)
+    }
+
+    var cameraUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    fun processImage(uri: Uri) {
+        scope.launch {
+            isLoading = true
+            error = null
+            recognizedText = ""
+            translatedText = ""
+            bookFound = false
+            bookId = null
+            bookTitle = null
+            translationSlider = 0f
+
+            try {
+                val file = withContext(Dispatchers.IO) {
+                    copyUriToCache(uri)
+                }
+
+                val requestFile = file.asRequestBody(
+                    "image/jpeg".toMediaType()
                 )
 
-                Column(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "Камераны китапка яки биткә юнәлтегез",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        "Без текстны табып, аны уку өчен әзерләячәкбез",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.7f),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
+                val body = MultipartBody.Part.createFormData(
+                    "file",
+                    file.name,
+                    requestFile
+                )
+
+                val response = ApiClient.apiService
+                    .recognizeImage(body)
+
+                recognizedText = response.text
+                bookFound = response.book_found
+                bookId = response.book_id
+                bookTitle = response.book_title
+
+                if (!response.book_found && response.text.isNotBlank()) {
+                    val translationResponse =
+                        ApiClient.apiService.translateOcrText(
+                            OcrTranslateRequest(
+                                text = response.text
+                            )
+                        )
+
+                    translatedText = translationResponse.translation
+                }
+
+            } catch (e: Exception) {
+                error = e.message ?: "Не удалось распознать изображение"
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture()
+        ) { success ->
+
+            if (success) {
+                cameraUri?.let {
+                    processImage(it)
                 }
             }
+        }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 48.dp, top = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                ShutterButton(scanning = scanning, onClick = { if (!scanning) scanning = true })
+    val galleryLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri ->
+
+            uri?.let {
+                processImage(it)
             }
         }
-    }
-}
 
-@Composable
-private fun ScannerTopBar(navController: NavHostController) {
-    Row(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 14.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp)
     ) {
-        RoundBackButton(onClick = { navController.popBackStack() })
-        IconButton(onClick = { navController.navigate(Routes.LIBRARY) }) {
-            Icon(
-                Icons.Filled.MenuBook,
-                contentDescription = "Китапханәгә кайту",
-                tint = Color.White
+
+        Text(
+            text = "Сканер",
+            style = MaterialTheme.typography.displaySmall,
+            modifier = Modifier.padding(
+                top = 24.dp,
+                bottom = 20.dp
+            )
+        )
+
+        Text(
+            text = "Сфотографируйте страницу татарского текста или выберите изображение из галереи.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(
+            modifier = Modifier.height(24.dp)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+
+            Button(
+                onClick = {
+                    val uri = AppContextHolder.createImageUri()
+                    cameraUri = uri
+                    cameraLauncher.launch(uri)
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("📷 Камера")
+            }
+
+            OutlinedButton(
+                onClick = {
+                    galleryLauncher.launch("image/*")
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("🖼 Галерея")
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.height(24.dp)
+        )
+
+        if (isLoading) {
+
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CircularProgressIndicator()
+
+                Spacer(
+                    modifier = Modifier.height(12.dp)
+                )
+
+                Text(
+                    text = "Распознаём текст..."
+                )
+            }
+        }
+
+        error?.let { message ->
+
+            Text(
+                text = message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 20.dp)
             )
         }
-    }
-}
 
-@Composable
-private fun ScannerFrame(modifier: Modifier = Modifier) {
-    Canvas(modifier = modifier) {
-        val cornerLen = size.minDimension * 0.12f
-        val strokeWidth = 6f
-        val c = Color.White.copy(alpha = 0.9f)
+        if (bookFound && bookId != null) {
 
-        // top-left
-        drawLine(c, Offset(0f, cornerLen), Offset(0f, 0f), strokeWidth)
-        drawLine(c, Offset(0f, 0f), Offset(cornerLen, 0f), strokeWidth)
-        // top-right
-        drawLine(c, Offset(size.width - cornerLen, 0f), Offset(size.width, 0f), strokeWidth)
-        drawLine(c, Offset(size.width, 0f), Offset(size.width, cornerLen), strokeWidth)
-        // bottom-left
-        drawLine(c, Offset(0f, size.height - cornerLen), Offset(0f, size.height), strokeWidth)
-        drawLine(c, Offset(0f, size.height), Offset(cornerLen, size.height), strokeWidth)
-        // bottom-right
-        drawLine(c, Offset(size.width - cornerLen, size.height), Offset(size.width, size.height), strokeWidth)
-        drawLine(c, Offset(size.width, size.height), Offset(size.width, size.height - cornerLen), strokeWidth)
-    }
-}
+            Spacer(
+                modifier = Modifier.height(24.dp)
+            )
 
-@Composable
-private fun ShutterButton(scanning: Boolean, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(85.dp)
-            .clickable(enabled = !scanning, onClick = onClick)
-            .background(Color.White.copy(alpha = 0.15f), CircleShape)
-            .padding(8.dp)
-            .background(Color.White, CircleShape),
-        contentAlignment = Alignment.Center
-    ) {
-        if (scanning) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, strokeWidth = 3.dp)
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+            Text(
+                text = "Книга найдена",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            bookTitle?.let { title ->
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            Button(
+                onClick = {
+                    navController.navigate(
+                        "book_reader/${bookId}"
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Открыть книгу")
+            }
+        }
+
+        if (recognizedText.isNotBlank() && !bookFound) {
+
+            Spacer(
+                modifier = Modifier.height(28.dp)
+            )
+
+            Text(
+                text = "Распознанный текст",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+
+            Slider(
+                value = translationSlider,
+                onValueChange = {
+                    translationSlider = if (it < 0.5f) 0f else 1f
+                },
+                steps = 0,
+                valueRange = 0f..1f
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Татарский")
+                Text("Русский")
+            }
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            Text(
+                text =
+                    if (translationSlider < 0.5f) {
+                        recognizedText
+                    } else {
+                        translatedText.ifBlank {
+                            "Перевод не найден"
+                        }
+                    },
+                style = MaterialTheme.typography.bodyLarge
             )
         }
+
+        Spacer(
+            modifier = Modifier.height(40.dp)
+        )
     }
+}
+
+private fun copyUriToCache(uri: Uri): File {
+    val context = AppContextHolder.context
+
+    val file = File.createTempFile(
+        "tatlib_ocr_",
+        ".jpg",
+        context.cacheDir
+    )
+
+    context.contentResolver.openInputStream(uri).use { input ->
+        requireNotNull(input) {
+            "Не удалось открыть изображение"
+        }
+
+        file.outputStream().use { output ->
+            input.copyTo(output)
+        }
+    }
+
+    return file
 }

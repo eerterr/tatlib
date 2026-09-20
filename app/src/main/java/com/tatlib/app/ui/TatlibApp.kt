@@ -123,13 +123,21 @@ fun TatlibApp() {
                 LibraryScreen(navController = navController, viewModel = appViewModel)
             }
             composable(Routes.SEARCH) {
-                SearchScreen(navController = navController)
+                SearchScreen(
+                    navController = navController,
+                    viewModel = appViewModel
+                )
             }
             composable(Routes.PROGRESS) {
-                ProgressScreen(navController = navController, viewModel = appViewModel)
+                ProgressScreen(
+                    navController = navController,
+                    viewModel = appViewModel
+                )
             }
             composable(Routes.SCANNER) {
-                ScannerScreen(navController = navController)
+                ScannerScreen(
+                    navController = navController,
+                )
             }
             composable(Routes.BOOK_DETAIL) { backStack ->
                 val bookId = backStack.arguments?.getString("bookId").orEmpty()

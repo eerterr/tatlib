@@ -3,34 +3,43 @@ package com.tatlib.app.ui.book
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.tatlib.app.data.Book
-import com.tatlib.app.data.MockData
 import com.tatlib.app.ui.AppViewModel
-import com.tatlib.app.ui.components.BookHeroCover
 import com.tatlib.app.ui.components.PrimaryButton
 import com.tatlib.app.ui.components.ScreenTopBar
-import com.tatlib.app.ui.components.StatTile
-import com.tatlib.app.ui.components.TagChip
-import com.tatlib.app.ui.navigation.Routes
 
 @Composable
-fun BookDetailScreen(navController: NavHostController, viewModel: AppViewModel, bookId: String) {
-    val book: Book = MockData.bookById(bookId) ?: MockData.shurale
+fun BookDetailScreen(
+    navController: NavHostController,
+    viewModel: AppViewModel,
+    bookId: String
+) {
+    val selectedBook by viewModel.selectedBook.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(bookId) {
+        val id = bookId.toIntOrNull()
+
+        if (id != null) {
+            viewModel.loadBook(id)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -39,51 +48,120 @@ fun BookDetailScreen(navController: NavHostController, viewModel: AppViewModel, 
             .padding(horizontal = 30.dp)
     ) {
         ScreenTopBar(
-            onBack = { navController.popBackStack() },
+            onBack = {
+                navController.popBackStack()
+            },
             showLanguageToggle = false,
-            showOverflow = true,
-            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
+            modifier = Modifier.padding(
+                top = 16.dp,
+                bottom = 8.dp
+            )
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            BookHeroCover(book)
-            Column(modifier = Modifier.weight(1f)) {
+        if (isLoading && selectedBook == null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 48.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                CircularProgressIndicator()
+
                 Text(
-                    book.title,
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Light
+                    text = "Китап йөкләнә...",
+                    style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(Modifier.height(10.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    book.tags.forEach { tag -> TagChip(tag) }
-                }
             }
+
+            return@Column
         }
 
-        PrimaryButton(
-            text = "Укырга",
-            onClick = { navController.navigate(Routes.bookReader(book.id)) },
-            modifier = Modifier.padding(top = 20.dp)
+        if (error != null && selectedBook == null) {
+            Text(
+                text = error ?: "Китапны йөкләп булмады",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 32.dp)
+            )
+
+            return@Column
+        }
+
+        val book = selectedBook ?: run {
+            Text(
+                text = "Китап табылмады",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(top = 32.dp)
+            )
+
+            return@Column
+        }
+
+        Text(
+            text = book.title,
+            style = MaterialTheme.typography.displaySmall,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(
+                top = 20.dp,
+                bottom = 8.dp
+            )
         )
 
         Text(
-            "Китап турында",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(top = 30.dp, bottom = 10.dp)
+            text = book.author,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 20.dp)
         )
-        Text(book.description, style = MaterialTheme.typography.bodyLarge)
+
+        if (book.genre.isNotBlank()) {
+            Text(
+                text = book.genre,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        Text(
+            text = "Дәрәҗә: ${book.level.label}",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+
+        if (book.description.isNotBlank()) {
+            Text(
+                text = book.description,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+        }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 36.dp, bottom = 30.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(bottom = 28.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            StatTile(value = book.pageCount.toString(), label = "текст")
-            StatTile(value = book.level.label, label = "дәрәҗә")
-            StatTile(value = book.readingTimeLabel, label = "вакыт")
+            if (book.readingTimeLabel.isNotBlank()) {
+                Text(
+                    text = book.readingTimeLabel,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Text(
+                text = "${book.pageCount} бүлек",
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
+
+        PrimaryButton(
+            text = "Укый башлау",
+            onClick = {
+                navController.navigate("book_reader/${book.id}")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp)
+        )
     }
 }

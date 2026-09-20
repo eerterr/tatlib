@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,13 +30,52 @@ import com.tatlib.app.ui.components.ScreenTopBar
 import com.tatlib.app.ui.navigation.Routes
 
 @Composable
-fun LevelQuizScreen(navController: NavHostController, viewModel: AppViewModel) {
+fun LevelQuizScreen(
+    navController: NavHostController,
+    viewModel: AppViewModel
+) {
     val questions = MockData.levelQuiz
-    var questionIndex by remember { mutableIntStateOf(0) }
-    var selectedOption by remember(questionIndex) { mutableStateOf<Int?>(null) }
+
+    var questionIndex by remember {
+        mutableIntStateOf(0)
+    }
+
+    var selectedOption by remember(questionIndex) {
+        mutableStateOf<Int?>(null)
+    }
+
+    var correctAnswers by remember {
+        mutableIntStateOf(0)
+    }
+
+    if (questions.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
+        ) {
+            ScreenTopBar(
+                onBack = {
+                    navController.popBackStack()
+                },
+                showLanguageToggle = false,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+
+            Text(
+                text = "Тест сораулары юк",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(top = 32.dp)
+            )
+        }
+
+        return
+    }
 
     val question = questions[questionIndex]
-    val progress = (questionIndex + 1f) / questions.size
+
+    val progress =
+        (questionIndex + 1f) / questions.size
 
     Column(
         modifier = Modifier
@@ -43,75 +83,129 @@ fun LevelQuizScreen(navController: NavHostController, viewModel: AppViewModel) {
             .padding(horizontal = 30.dp)
     ) {
         ScreenTopBar(
-            onBack = { navController.popBackStack() },
+            onBack = {
+                navController.popBackStack()
+            },
             showLanguageToggle = false,
             modifier = Modifier.padding(top = 16.dp)
         )
 
         Text(
-            "Определи свой уровень татарского",
+            text = "Определи свой уровень татарского",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(top = 8.dp, bottom = 20.dp)
+            modifier = Modifier.padding(
+                top = 8.dp,
+                bottom = 20.dp
+            )
         )
 
         Text(
-            "${questionIndex + 1} / ${questions.size}",
+            text = "${questionIndex + 1} / ${questions.size}",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 6.dp, bottom = 30.dp)
-                .clip(RoundedCornerShape(8.dp)),
+                .padding(
+                    top = 6.dp,
+                    bottom = 30.dp
+                )
+                .clip(
+                    RoundedCornerShape(8.dp)
+                ),
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
             color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            question.prompt,
+            text = question.prompt,
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 28.dp)
         )
 
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             question.options.forEachIndexed { index, option ->
-                val selected = selectedOption == index
+
+                val selected =
+                    selectedOption == index
+
                 Text(
-                    option.text,
+                    text = option.text,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                    color =
+                        if (selected) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(
-                            if (selected) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.surfaceVariant
+                        .clip(
+                            RoundedCornerShape(16.dp)
                         )
-                        .clickable { selectedOption = index }
-                        .padding(horizontal = 18.dp, vertical = 16.dp)
+                        .background(
+                            if (selected) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            }
+                        )
+                        .clickable {
+                            selectedOption = index
+                        }
+                        .padding(
+                            horizontal = 18.dp,
+                            vertical = 16.dp
+                        )
                 )
             }
         }
 
-        androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
 
         PrimaryButton(
-            text = if (questionIndex == questions.lastIndex) "Тәмамлау" else "Алга",
+            text =
+                if (questionIndex == questions.lastIndex) {
+                    "Тәмамлау"
+                } else {
+                    "Алга"
+                },
             enabled = selectedOption != null,
             onClick = {
-                val correct = question.options[selectedOption!!].isCorrect
-                viewModel.recordQuizAnswer(questionIndex, correct)
+                val selected = selectedOption ?: return@PrimaryButton
+
+                val correct =
+                    question.options[selected].isCorrect
+
+                if (correct) {
+                    correctAnswers++
+                }
+
                 if (questionIndex == questions.lastIndex) {
-                    viewModel.finishQuizAndComputeLevel()
-                    navController.navigate(Routes.LEVEL_RESULT)
+
+                    navController.navigate(
+                        Routes.LEVEL_RESULT
+                    ) {
+                        popUpTo(Routes.LEVEL_QUIZ) {
+                            inclusive = true
+                        }
+                    }
+
                 } else {
-                    questionIndex += 1
+                    questionIndex++
                 }
             },
-            modifier = Modifier.padding(bottom = 32.dp)
+            modifier = Modifier.padding(
+                bottom = 32.dp
+            )
         )
     }
 }

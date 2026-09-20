@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
@@ -20,16 +19,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.tatlib.app.ui.AppLanguage
 
-/** TAT / RU switch that appears in the top-right corner of almost every screen. */
+/**
+ * Application language used by the top-bar language switch.
+ */
+enum class AppLanguage {
+    TAT,
+    RU
+}
+
+/**
+ * TAT / RU switch that appears in the top-right corner
+ * of almost every screen.
+ */
 @Composable
 fun LanguageToggle(
     language: AppLanguage,
     onToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
+    val interactionSource = remember {
+        MutableInteractionSource()
+    }
+
     Row(
         modifier = modifier.clickable(
             interactionSource = interactionSource,
@@ -38,25 +50,54 @@ fun LanguageToggle(
         ),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         Text(
-            "TAT",
+            text = "TAT",
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (language == AppLanguage.TAT) FontWeight.SemiBold else FontWeight.Normal,
-            textDecoration = if (language == AppLanguage.TAT) TextDecoration.Underline else null
+            fontWeight =
+                if (language == AppLanguage.TAT) {
+                    FontWeight.SemiBold
+                } else {
+                    FontWeight.Normal
+                },
+            textDecoration =
+                if (language == AppLanguage.TAT) {
+                    TextDecoration.Underline
+                } else {
+                    null
+                }
         )
-        Text(" / ", style = MaterialTheme.typography.bodyLarge)
+
         Text(
-            "RU",
+            text = " / ",
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        Text(
+            text = "RU",
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (language == AppLanguage.RU) FontWeight.SemiBold else FontWeight.Normal,
-            textDecoration = if (language == AppLanguage.RU) TextDecoration.Underline else null
+            fontWeight =
+                if (language == AppLanguage.RU) {
+                    FontWeight.SemiBold
+                } else {
+                    FontWeight.Normal
+                },
+            textDecoration =
+                if (language == AppLanguage.RU) {
+                    TextDecoration.Underline
+                } else {
+                    null
+                }
         )
     }
 }
 
-/** Row with an optional back chevron on the left and the language toggle / overflow
- *  on the right — used at the top of most screens instead of a heavy Material AppBar,
- *  matching the light-touch headers in the Figma file. */
+/**
+ * Row with an optional back button on the left
+ * and language toggle / overflow menu on the right.
+ *
+ * Used at the top of most screens.
+ */
 @Composable
 fun ScreenTopBar(
     modifier: Modifier = Modifier,
@@ -67,22 +108,39 @@ fun ScreenTopBar(
     showOverflow: Boolean = false,
     onOverflowClick: () -> Unit = {}
 ) {
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         if (onBack != null) {
-            RoundBackButton(onClick = onBack)
+            RoundBackButton(
+                onClick = onBack
+            )
         }
-        Spacer(Modifier.weight(1f))
+
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
+
         if (showLanguageToggle) {
-            LanguageToggle(language = language, onToggle = onToggleLanguage)
+            LanguageToggle(
+                language = language,
+                onToggle = onToggleLanguage
+            )
         }
+
         if (showOverflow) {
-            IconButton(onClick = onOverflowClick) {
-                Icon(Icons.Default.MoreVert, contentDescription = "Күбрәк")
+            IconButton(
+                onClick = onOverflowClick
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Күбрәк"
+                )
             }
         }
     }

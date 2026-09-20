@@ -32,13 +32,21 @@ import com.tatlib.app.ui.components.colorForLevel
 import com.tatlib.app.ui.navigation.Routes
 
 @Composable
-fun LevelResultScreen(navController: NavHostController, viewModel: AppViewModel) {
-    var selectedLevel by remember { mutableStateOf(viewModel.userLevel ?: TatarLevel.B1) }
+fun LevelResultScreen(
+    navController: NavHostController,
+    viewModel: AppViewModel
+) {
+    var selectedLevel by remember {
+        mutableStateOf(TatarLevel.B1)
+    }
 
     fun goToLibrary(level: TatarLevel) {
-        viewModel.setLevelManually(level)
+        selectedLevel = level
+
         navController.navigate(Routes.LIBRARY) {
-            popUpTo(Routes.ONBOARDING_WELCOME) { inclusive = true }
+            popUpTo(Routes.ONBOARDING_WELCOME) {
+                inclusive = true
+            }
         }
     }
 
@@ -48,14 +56,19 @@ fun LevelResultScreen(navController: NavHostController, viewModel: AppViewModel)
             .padding(horizontal = 30.dp)
     ) {
         ScreenTopBar(
-            onBack = { navController.popBackStack() },
+            onBack = {
+                navController.popBackStack()
+            },
             showLanguageToggle = false,
             modifier = Modifier.padding(top = 16.dp)
         )
 
-        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
-                "Сезнең Татар теле дәрәҗәсе",
+                text = "Сезнең Татар теле дәрәҗәсе",
                 style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(bottom = 36.dp)
@@ -67,30 +80,45 @@ fun LevelResultScreen(navController: NavHostController, viewModel: AppViewModel)
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TatarLevel.entries.forEach { level ->
+
                     val selected = level == selectedLevel
-                    val size = if (selected) 56.dp else 40.dp
+                    val circleSize =
+                        if (selected) 56.dp else 40.dp
+
                     Box(
                         modifier = Modifier
-                            .size(size)
+                            .size(circleSize)
                             .background(
-                                if (selected) colorForLevel(level) else MaterialTheme.colorScheme.surfaceVariant,
-                                CircleShape
+                                color =
+                                    if (selected) {
+                                        colorForLevel(level)
+                                    } else {
+                                        MaterialTheme.colorScheme.surfaceVariant
+                                    },
+                                shape = CircleShape
                             )
-                            .clickable { selectedLevel = level },
+                            .clickable {
+                                selectedLevel = level
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            level.label,
+                            text = level.label,
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.SemiBold,
-                            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color =
+                                if (selected) {
+                                    MaterialTheme.colorScheme.onPrimary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                }
                         )
                     }
                 }
             }
 
             Text(
-                "Дәрәҗәгезне төзәтергә телисез икән, теләгән хәрефкә басыгыз.",
+                text = "Дәрәҗәгезне төзәтергә телисез икән, теләгән хәрефкә басыгыз.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 20.dp)
@@ -99,15 +127,23 @@ fun LevelResultScreen(navController: NavHostController, viewModel: AppViewModel)
 
         WideButton(
             text = "Дәвам итү",
-            onClick = { goToLibrary(selectedLevel) },
+            onClick = {
+                goToLibrary(selectedLevel)
+            },
             modifier = Modifier.fillMaxWidth()
         )
+
         WideOutlinedButton(
             text = "Татар телен белмим",
-            onClick = { goToLibrary(TatarLevel.A1) },
+            onClick = {
+                goToLibrary(TatarLevel.A1)
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp, bottom = 32.dp)
+                .padding(
+                    top = 12.dp,
+                    bottom = 32.dp
+                )
         )
     }
 }
