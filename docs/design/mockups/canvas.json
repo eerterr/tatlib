@@ -1,14 +1,6 @@
 {
  "v": 3,
- "createdOnFiles": {
-  "v": 1,
-  "at": "2026-09-20T03:10:13Z"
- },
- "title": "TatLib — экраны",
- "launch": {
-  "view": "canvas"
- },
- "pages": [],
+ "attachments": {},
  "boards": {
   "Main.dc.html": {
    "x": 0,
@@ -82,25 +74,41 @@
    "title": "Дәрәҗә нәтиҗәсе",
    "is_interactive": true
   },
-  "Library.dc.html": {
+  "LibraryMorning.dc.html": {
    "x": 0,
    "y": 3792,
    "w": 390,
    "h": 844,
-   "title": "Китапханә",
+   "title": "Китапханә · иртә",
+   "is_interactive": true
+  },
+  "Library.dc.html": {
+   "x": 470,
+   "y": 3792,
+   "w": 390,
+   "h": 844,
+   "title": "Китапханә · көндез",
+   "is_interactive": true
+  },
+  "LibraryEvening.dc.html": {
+   "x": 940,
+   "y": 3792,
+   "w": 390,
+   "h": 844,
+   "title": "Китапханә · кич",
    "is_interactive": true
   },
   "Search.dc.html": {
-   "x": 470,
-   "y": 3792,
+   "x": 0,
+   "y": 5056,
    "w": 390,
    "h": 844,
    "title": "Эзләү",
    "is_interactive": true
   },
   "BookDetail.dc.html": {
-   "x": 940,
-   "y": 3792,
+   "x": 470,
+   "y": 5056,
    "w": 390,
    "h": 844,
    "title": "Шүрәле",
@@ -108,7 +116,7 @@
   },
   "Reader.dc.html": {
    "x": 0,
-   "y": 5056,
+   "y": 6320,
    "w": 390,
    "h": 844,
    "title": "Ридер · Оригинал",
@@ -116,7 +124,7 @@
   },
   "ReaderWord.dc.html": {
    "x": 470,
-   "y": 5056,
+   "y": 6320,
    "w": 390,
    "h": 844,
    "title": "Ридер · Сүз",
@@ -124,7 +132,7 @@
   },
   "ReaderDark.dc.html": {
    "x": 940,
-   "y": 5056,
+   "y": 6320,
    "w": 390,
    "h": 844,
    "title": "Ридер · Караңгы",
@@ -132,7 +140,7 @@
   },
   "Recap.dc.html": {
    "x": 1410,
-   "y": 5056,
+   "y": 6320,
    "w": 390,
    "h": 844,
    "title": "Сессия нәтиҗәсе",
@@ -140,7 +148,7 @@
   },
   "Progress.dc.html": {
    "x": 0,
-   "y": 6320,
+   "y": 7584,
    "w": 390,
    "h": 844,
    "title": "Алгарышың",
@@ -148,7 +156,7 @@
   },
   "ScannerStart.dc.html": {
    "x": 470,
-   "y": 6320,
+   "y": 7584,
    "w": 390,
    "h": 844,
    "title": "Сканер",
@@ -156,7 +164,7 @@
   },
   "ScannerBusy.dc.html": {
    "x": 940,
-   "y": 6320,
+   "y": 7584,
    "w": 390,
    "h": 844,
    "title": "Сканер · тану",
@@ -164,7 +172,7 @@
   },
   "ScannerFound.dc.html": {
    "x": 1410,
-   "y": 6320,
+   "y": 7584,
    "w": 390,
    "h": 844,
    "title": "Сканер · табылды",
@@ -172,7 +180,7 @@
   },
   "Profile.dc.html": {
    "x": 1880,
-   "y": 6320,
+   "y": 7584,
    "w": 390,
    "h": 844,
    "title": "Профиль",
@@ -180,17 +188,83 @@
   },
   "Components.dc.html": {
    "x": 0,
-   "y": 7584,
+   "y": 8848,
    "w": 1000,
-   "h": 1560,
+   "h": 1900,
    "title": "Компонентлар · якты"
   },
   "ComponentsDark.dc.html": {
    "x": 1080,
-   "y": 7584,
+   "y": 8848,
    "w": 1000,
-   "h": 1560,
+   "h": 1900,
    "title": "Компонентлар · караңгы"
+  }
+ },
+ "createdOnFiles": {
+  "at": "2026-09-20T02:52:44Z",
+  "v": 1
+ },
+ "designSystems": [],
+ "launch": {
+  "view": "canvas"
+ },
+ "notes": {
+  "row1": {
+   "x": 0,
+   "y": -260,
+   "text": "1 · Кереш: Splash, Welcome (TAT / RU), выбор входа",
+   "kind": "title1",
+   "maxW": 1800
+  },
+  "row2": {
+   "x": 0,
+   "y": 1004,
+   "text": "2 · Теркәлү һәм керү — стекло на фото",
+   "kind": "title1",
+   "maxW": 1400
+  },
+  "row3": {
+   "x": 0,
+   "y": 2268,
+   "text": "3 · Дәрәҗә тесты — дуги, звёзды, арка",
+   "kind": "title1",
+   "maxW": 1400
+  },
+  "row4": {
+   "x": 0,
+   "y": 3532,
+   "text": "4 · Китапханә: иртә / көндез / кич",
+   "kind": "title1",
+   "maxW": 1400
+  },
+  "row5": {
+   "x": 0,
+   "y": 4796,
+   "text": "5–6 · Эзләү · Китап",
+   "kind": "title1",
+   "maxW": 1400
+  },
+  "row6": {
+   "x": 0,
+   "y": 6060,
+   "text": "7–8 · Ридер (оригинал, сүз, караңгы) · Recap",
+   "kind": "title1",
+   "maxW": 1800
+  },
+  "row7": {
+   "x": 0,
+   "y": 7324,
+   "text": "9–11 · Алгарышың · Сканер ×3 · Профиль",
+   "kind": "title1",
+   "maxW": 2270
+  },
+  "row8": {
+   "x": 0,
+   "y": 8588,
+   "text": "12 · Компонентлар: якты һәм караңгы тема",
+   "kind": "title1",
+   "maxW": 2080
   }
  },
  "order": [
@@ -203,7 +277,9 @@
   "LevelIntro.dc.html",
   "Quiz.dc.html",
   "LevelResult.dc.html",
+  "LibraryMorning.dc.html",
   "Library.dc.html",
+  "LibraryEvening.dc.html",
   "Search.dc.html",
   "BookDetail.dc.html",
   "Reader.dc.html",
@@ -218,56 +294,6 @@
   "Components.dc.html",
   "ComponentsDark.dc.html"
  ],
- "notes": {
-  "row1": {
-   "x": 0,
-   "y": -260,
-   "text": "1 · Кереш: Splash, Welcome (TAT / RU), выбор входа",
-   "kind": "title1",
-   "maxW": 1800
-  },
-  "row2": {
-   "x": 0,
-   "y": 1004,
-   "text": "2 · Теркәлү һәм керү",
-   "kind": "title1",
-   "maxW": 1400
-  },
-  "row3": {
-   "x": 0,
-   "y": 2268,
-   "text": "3 · Дәрәҗә тесты: интро, сорау 1/5, нәтиҗә",
-   "kind": "title1",
-   "maxW": 1400
-  },
-  "row4": {
-   "x": 0,
-   "y": 3532,
-   "text": "4–6 · Китапханә · Эзләү · Китап",
-   "kind": "title1",
-   "maxW": 1400
-  },
-  "row5": {
-   "x": 0,
-   "y": 4796,
-   "text": "7–8 · Ридер (оригинал, сүз, караңгы) · Recap",
-   "kind": "title1",
-   "maxW": 1800
-  },
-  "row6": {
-   "x": 0,
-   "y": 6060,
-   "text": "9–11 · Алгарышың · Сканер ×3 · Профиль",
-   "kind": "title1",
-   "maxW": 2270
-  },
-  "row7": {
-   "x": 0,
-   "y": 7324,
-   "text": "12 · Компонентлар: якты һәм караңгы тема",
-   "kind": "title1",
-   "maxW": 2080
-  }
- },
- "designSystems": []
+ "pages": [],
+ "title": "TatLib — экраны"
 }
