@@ -28,6 +28,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -97,15 +101,21 @@ fun GlassField(
     keyboardType: KeyboardType = KeyboardType.Text
 ) {
     val white = MaterialTheme.tatlibColors.onPhoto
+    val interaction = remember { MutableInteractionSource() }
+    val focused by interaction.collectIsFocusedAsState()
+    // focus = 2 dp secondary (MASTER § 7, .field.focus в tatlib.css)
+    val stroke = if (focused) 2.dp else 1.dp
+    val strokeColor = if (focused) MaterialTheme.colorScheme.secondary else white.copy(alpha = 0.7f)
     FieldFrame(
         value = value,
         onValueChange = onValueChange,
         placeholder = placeholder,
         leadingIcon = leadingIcon,
+        interactionSource = interaction,
         modifier = modifier
             .height(54.dp)
             .background(MaterialTheme.tatlibColors.glassField, PillShape)
-            .border(1.dp, white.copy(alpha = 0.7f), PillShape)
+            .border(stroke, strokeColor, PillShape)
             .padding(horizontal = 18.dp),
         trailingIcon = trailingIcon,
         onTrailingClick = onTrailingClick,
@@ -130,15 +140,20 @@ fun PlainField(
     keyboardType: KeyboardType = KeyboardType.Text
 ) {
     val shape = RoundedCornerShape(14.dp)
+    val interaction = remember { MutableInteractionSource() }
+    val focused by interaction.collectIsFocusedAsState()
+    val stroke = if (focused) 2.dp else 1.dp
+    val strokeColor = if (focused) MaterialTheme.colorScheme.secondary else MaterialTheme.tatlibColors.line
     FieldFrame(
         value = value,
         onValueChange = onValueChange,
         placeholder = placeholder,
         leadingIcon = leadingIcon,
+        interactionSource = interaction,
         modifier = modifier
             .height(52.dp)
             .background(MaterialTheme.colorScheme.surface, shape)
-            .border(1.dp, MaterialTheme.tatlibColors.line, shape)
+            .border(stroke, strokeColor, shape)
             .padding(horizontal = 16.dp),
         trailingIcon = trailingIcon,
         onTrailingClick = onTrailingClick,
@@ -153,6 +168,7 @@ private fun FieldFrame(
     onValueChange: (String) -> Unit,
     placeholder: String,
     leadingIcon: ImageVector,
+    interactionSource: MutableInteractionSource,
     modifier: Modifier,
     trailingIcon: ImageVector?,
     onTrailingClick: () -> Unit,
@@ -169,6 +185,7 @@ private fun FieldFrame(
         cursorBrush = SolidColor(ink),
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(keyboardType = if (isPassword) KeyboardType.Password else keyboardType),
+        interactionSource = interactionSource,
         modifier = modifier.fillMaxWidth(),
         decorationBox = { inner ->
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {

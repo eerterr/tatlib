@@ -94,7 +94,7 @@ fun SearchScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .statusBarsPadding()
-                .padding(start = 24.dp, end = 24.dp, top = 20.dp, bottom = 24.dp),
+                .padding(start = 24.dp, end = 24.dp, top = 20.dp, bottom = 96.dp), // 24 + 72 под мини-бар
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(stringResource(R.string.nav_search), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onBackground)
@@ -110,8 +110,8 @@ fun SearchScreen(
             // Сетка 2×2 плиток; цвета из tile() в gen2.py — токены tileSteel / tileHoney в теме.
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Tile(Category.TALES, stringResource(R.string.library_filter_tales), books, colors.forest, R.drawable.cover_shurale, category, { category = it }, Modifier.weight(1f))
-                    Tile(Category.STORIES, stringResource(R.string.library_filter_stories), books, colors.terracotta, R.drawable.cover_najip, category, { category = it }, Modifier.weight(1f))
+                    Tile(Category.TALES, stringResource(R.string.library_filter_tales), books, colors.tileForest, R.drawable.cover_shurale, category, { category = it }, Modifier.weight(1f))
+                    Tile(Category.STORIES, stringResource(R.string.library_filter_stories), books, colors.tileTerracotta, R.drawable.cover_najip, category, { category = it }, Modifier.weight(1f))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Tile(Category.TUKAY, stringResource(R.string.library_filter_tukay), books, colors.tileSteel, R.drawable.cover_su_anasy, category, { category = it }, Modifier.weight(1f))

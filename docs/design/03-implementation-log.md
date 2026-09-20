@@ -107,3 +107,9 @@
 - `WhitePill` удалён: в v2.1 на фото используется `ActionButton.OnPhoto`, вызовов не было. `LevelDot` оставлен (MASTER § 2.3, лист компонентов).
 - Сканер: `cameraUri` в `rememberSaveable` (пересоздание Activity во время системной камеры), `finally` сбрасывает `isLoading` только своему `Job`, запуск камеры в `runCatching` (эмулятор без камеры).
 - Ридер: `getLineEnd(visibleEnd = true)` — иначе первая часть текста перед всплывашкой заканчивалась переводом строки.
+
+## Фаза 5 — независимый агент (три расхождения, все починены)
+
+- Плитки «Әкиятләр»/«Хикәяләр» на «Эзләү» брали `forest`/`terracotta`, которые в тёмной теме светлеют (`#A9C79A`, `#E08A66`) — белый текст 1.85:1 / 2.63:1. В `tile()` цвета — литералы, не зависящие от темы → токены `tileForest #4E6B48`, `tileTerracotta #B4522E` одинаковы в обеих схемах (как `tileSteel`/`tileHoney`).
+- Мини-бар «Хәзер укыла» лежал в `bottomBar` Scaffold и входил в `innerPadding` — выглядел второй полкой навигации, а не плавающим плеером (`.mini` position:absolute, bottom 88). Вынесен в `Box` поверх `NavHost` (`align(BottomCenter)`, 12/12/8); Library и Search оставляют 72 dp снизу.
+- У полей `GlassField`/`PlainField` не было состояния фокуса (`.field.focus` 2 dp forest, MASTER § 7.10) — добавлен `MutableInteractionSource` + `collectIsFocusedAsState`: рамка 2 dp `colorScheme.secondary` при фокусе.

@@ -163,7 +163,8 @@ fun LibraryScreen(
                 }
             )
             Column(
-                modifier = Modifier.fillMaxWidth().padding(top = 120.dp, bottom = 24.dp),
+                // bottom 24 + 72 под плавающий мини-бар «Хәзер укыла» (TatlibApp)
+                modifier = Modifier.fillMaxWidth().padding(top = 120.dp, bottom = 96.dp),
                 verticalArrangement = Arrangement.spacedBy(22.dp)
             ) {
                 Column(modifier = Modifier.padding(sidePadding), verticalArrangement = Arrangement.spacedBy(6.dp)) {

@@ -33,6 +33,8 @@ val SkyContainer = Color(0xFFDCE9F4)
 val Sky2 = Color(0xFFBFD7EA)           // круг второстепенного действия, дуги
 val ErrorLight = Color(0xFFB3402A)
 // Заливки плиток категорий на «Эзләү» (tile() в gen2.py): белый текст поверх, одинаковы в обеих темах.
+val TileForest = Color(0xFF4E6B48)   // «Әкиятләр»
+val TileTerracotta = Color(0xFFB4522E) // «Хикәяләр»
 val TileSteel = Color(0xFF3F6F8A)    // «Тукай»
 val TileHoney = Color(0xFF8C6A1F)    // «Дәрәҗәм B1»
 val White = Color(0xFFFFFFFF)
@@ -75,6 +77,8 @@ data class TatlibColors(
     val sky2: Color,
     val skyContainer: Color,
     /** Плитки категорий поиска: сине-стальная («Тукай») и медовая («Дәрәҗәм»). */
+    val tileForest: Color,
+    val tileTerracotta: Color,
     val tileSteel: Color,
     val tileHoney: Color,
     val sage: Color,
@@ -108,6 +112,8 @@ val LightTatlibColors = TatlibColors(
     sky = Sky,
     sky2 = Sky2,
     skyContainer = SkyContainer,
+    tileForest = TileForest,
+    tileTerracotta = TileTerracotta,
     tileSteel = TileSteel,
     tileHoney = TileHoney,
     sage = Sage,
@@ -142,6 +148,8 @@ val DarkTatlibColors = TatlibColors(
     sky = NightSky,
     sky2 = NightSky2,
     skyContainer = NightSkyContainer,
+    tileForest = TileForest,
+    tileTerracotta = TileTerracotta,
     tileSteel = TileSteel,
     tileHoney = TileHoney,
     sage = SageLight,

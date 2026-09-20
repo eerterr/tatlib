@@ -1,6 +1,6 @@
 package com.tatlib.app.ui
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,87 +56,91 @@ fun TatlibApp() {
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (showBottomBar) {
-                Column(modifier = Modifier.navigationBarsPadding()) {
-                    if (showMiniBar && currentBook != null) {
-                        MiniReadingBar(
-                            book = currentBook,
-                            onOpen = { navController.navigate(Routes.bookReader(currentBook.id)) },
-                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
-                        )
-                    }
-                    BottomNav(
-                        selectedRoute = currentRoute.orEmpty(),
-                        onSelect = { route ->
-                            if (route != currentRoute) {
-                                navController.navigate(route) {
-                                    popUpTo(Routes.LIBRARY) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+                BottomNav(
+                    selectedRoute = currentRoute.orEmpty(),
+                    onSelect = { route ->
+                        if (route != currentRoute) {
+                            navController.navigate(route) {
+                                popUpTo(Routes.LIBRARY) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
                         }
-                    )
-                }
+                    },
+                    modifier = Modifier.navigationBarsPadding()
+                )
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = Routes.SPLASH,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(Routes.SPLASH) {
-                SplashScreen(navController = navController, viewModel = appViewModel)
+        Box(Modifier.padding(innerPadding)) {
+            NavHost(
+                navController = navController,
+                startDestination = Routes.SPLASH
+            ) {
+                composable(Routes.SPLASH) {
+                    SplashScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.ONBOARDING_WELCOME) {
+                    WelcomeScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.AUTH_CHOICE) {
+                    AuthChoiceScreen(navController = navController)
+                }
+                composable(Routes.REGISTER) {
+                    RegisterScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.LOGIN) {
+                    LoginScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.LEVEL_INTRO) {
+                    LevelIntroScreen(navController = navController)
+                }
+                composable(Routes.LEVEL_QUIZ) {
+                    LevelQuizScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.LEVEL_RESULT) {
+                    LevelResultScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.LIBRARY) {
+                    LibraryScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.SEARCH) {
+                    SearchScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.PROGRESS) {
+                    ProgressScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.PROFILE) {
+                    ProfileScreen(navController = navController, viewModel = appViewModel)
+                }
+                composable(Routes.SCANNER) {
+                    ScannerScreen(navController = navController)
+                }
+                composable(Routes.BOOK_DETAIL) { backStack ->
+                    val bookId = backStack.arguments?.getString("bookId").orEmpty()
+                    BookDetailScreen(navController = navController, viewModel = appViewModel, bookId = bookId)
+                }
+                composable(Routes.BOOK_READER) { backStack ->
+                    val bookId = backStack.arguments?.getString("bookId").orEmpty()
+                    BookReaderScreen(navController = navController, viewModel = appViewModel, bookId = bookId)
+                }
+                composable(Routes.RECAP) { backStack ->
+                    val bookId = backStack.arguments?.getString("bookId").orEmpty()
+                    RecapScreen(navController = navController, viewModel = appViewModel, bookId = bookId)
+                }
             }
-            composable(Routes.ONBOARDING_WELCOME) {
-                WelcomeScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.AUTH_CHOICE) {
-                AuthChoiceScreen(navController = navController)
-            }
-            composable(Routes.REGISTER) {
-                RegisterScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.LOGIN) {
-                LoginScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.LEVEL_INTRO) {
-                LevelIntroScreen(navController = navController)
-            }
-            composable(Routes.LEVEL_QUIZ) {
-                LevelQuizScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.LEVEL_RESULT) {
-                LevelResultScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.LIBRARY) {
-                LibraryScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.SEARCH) {
-                SearchScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.PROGRESS) {
-                ProgressScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.PROFILE) {
-                ProfileScreen(navController = navController, viewModel = appViewModel)
-            }
-            composable(Routes.SCANNER) {
-                ScannerScreen(navController = navController)
-            }
-            composable(Routes.BOOK_DETAIL) { backStack ->
-                val bookId = backStack.arguments?.getString("bookId").orEmpty()
-                BookDetailScreen(navController = navController, viewModel = appViewModel, bookId = bookId)
-            }
-            composable(Routes.BOOK_READER) { backStack ->
-                val bookId = backStack.arguments?.getString("bookId").orEmpty()
-                BookReaderScreen(navController = navController, viewModel = appViewModel, bookId = bookId)
-            }
-            composable(Routes.RECAP) { backStack ->
-                val bookId = backStack.arguments?.getString("bookId").orEmpty()
-                RecapScreen(navController = navController, viewModel = appViewModel, bookId = bookId)
+            // Мини-бар плавает поверх списка (`.mini` position:absolute, bottom 88 = 80 нав + 8);
+            // экраны library/search оставляют под него 72 dp снизу.
+            if (showMiniBar && currentBook != null) {
+                MiniReadingBar(
+                    book = currentBook,
+                    onOpen = { navController.navigate(Routes.bookReader(currentBook.id)) },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+                )
             }
         }
     }
