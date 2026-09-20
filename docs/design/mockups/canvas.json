@@ -154,48 +154,72 @@
    "title": "Алгарышың",
    "is_interactive": true
   },
-  "ScannerStart.dc.html": {
-   "x": 470,
-   "y": 7584,
-   "w": 390,
-   "h": 844,
-   "title": "Сканер",
-   "is_interactive": true
-  },
-  "ScannerBusy.dc.html": {
-   "x": 940,
-   "y": 7584,
-   "w": 390,
-   "h": 844,
-   "title": "Сканер · тану",
-   "is_interactive": true
-  },
-  "ScannerFound.dc.html": {
-   "x": 1410,
-   "y": 7584,
-   "w": 390,
-   "h": 844,
-   "title": "Сканер · табылды",
-   "is_interactive": true
-  },
   "Profile.dc.html": {
-   "x": 1880,
+   "x": 470,
    "y": 7584,
    "w": 390,
    "h": 844,
    "title": "Профиль",
    "is_interactive": true
   },
-  "Components.dc.html": {
+  "ScannerStart.dc.html": {
    "x": 0,
    "y": 8848,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер",
+   "is_interactive": true
+  },
+  "ScannerBusy.dc.html": {
+   "x": 470,
+   "y": 8848,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер · тану",
+   "is_interactive": true
+  },
+  "ScannerText.dc.html": {
+   "x": 940,
+   "y": 8848,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер · текст · оригинал",
+   "is_interactive": true
+  },
+  "ScannerTextAd.dc.html": {
+   "x": 1410,
+   "y": 8848,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер · текст · адаптация",
+   "is_interactive": true
+  },
+  "ScannerTextRu.dc.html": {
+   "x": 1880,
+   "y": 8848,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер · текст · русча",
+   "is_interactive": true
+  },
+  "ScannerMatch.dc.html": {
+   "x": 2350,
+   "y": 8848,
+   "w": 390,
+   "h": 844,
+   "title": "Сканер · китап табылды",
+   "is_interactive": true
+  },
+  "Components.dc.html": {
+   "x": 0,
+   "y": 10112,
    "w": 1000,
    "h": 1900,
    "title": "Компонентлар · якты"
   },
   "ComponentsDark.dc.html": {
    "x": 1080,
-   "y": 8848,
+   "y": 10112,
    "w": 1000,
    "h": 1900,
    "title": "Компонентлар · караңгы"
@@ -255,13 +279,20 @@
   "row7": {
    "x": 0,
    "y": 7324,
-   "text": "9–11 · Алгарышың · Сканер ×3 · Профиль",
+   "text": "9 · Алгарышың · Профиль",
    "kind": "title1",
-   "maxW": 2270
+   "maxW": 1400
   },
   "row8": {
    "x": 0,
    "y": 8588,
+   "text": "10 · Сканер: камера → тану → текст с ползунком сложности → китап табылды",
+   "kind": "title1",
+   "maxW": 2740
+  },
+  "row9": {
+   "x": 0,
+   "y": 9852,
    "text": "12 · Компонентлар: якты һәм караңгы тема",
    "kind": "title1",
    "maxW": 2080
@@ -287,10 +318,13 @@
   "ReaderDark.dc.html",
   "Recap.dc.html",
   "Progress.dc.html",
+  "Profile.dc.html",
   "ScannerStart.dc.html",
   "ScannerBusy.dc.html",
-  "ScannerFound.dc.html",
-  "Profile.dc.html",
+  "ScannerText.dc.html",
+  "ScannerTextAd.dc.html",
+  "ScannerTextRu.dc.html",
+  "ScannerMatch.dc.html",
   "Components.dc.html",
   "ComponentsDark.dc.html"
  ],

@@ -66,8 +66,11 @@ def pill(text, href, kind="white", extra="", icon=None):
     return f'<a class="btn btn-{kind} {extra}" href="{href}">{i}<span>{text}</span></a>'
 def roundbtn(href, color="var(--peach2)", label="Алга", size=52, fg="var(--ink)"):
     return f'<a class="rb" href="{href}" aria-label="{label}" style="width:{size}px;height:{size}px;background:{color};color:{fg}">{orn(1, 22, fg)}</a>'
-def action(text, href, color="var(--peach2)", align="left"):
-    return f'<a class="act{" r" if align == "right" else ""}" href="{href}">{roundbtn("#", color, text, 56) if False else f"<span class=rb style=width:56px;height:56px;background:{color};color:var(--ink)>{orn(1, 24, chr(118)+chr(97)+chr(114)+chr(40)+chr(45)+chr(45)+chr(105)+chr(110)+chr(107)+chr(41))}</span>"}<span class="t2">{text}</span></a>'
+def action(text, href, color="var(--peach2)", align="left", light=False, fg="var(--ink)"):
+    lbl = 'style="color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.35)"' if light else ""
+    return (f'<a class="act{" r" if align == "right" else ""}" href="{href}">'
+            f'<span class="rb" style="width:56px;height:56px;background:{color};color:{fg}">{orn(1, 24, fg)}</span>'
+            f'<span class="t2" {lbl}>{text}</span></a>')
 def lv(l): return f'<span class="lv lv-{l}">{l}</span>'
 
 BOOKS = [(1, "Су анасы", "Габдулла Тукай", "B1", "шигъри әкият", "1908", 413, 292, 28, IMG["cover1"]),
@@ -171,7 +174,7 @@ def welcome(ru):
 <div class="body" style="position:relative;justify-content:flex-end;gap:12px;color:#fff;padding-bottom:36px">
   <h1 class="h0" style="text-wrap:balance">{h}</h1>
   <p class="b1" style="opacity:.92;margin-bottom:10px">{s}</p>
-  <div style="display:flex;align-items:center;justify-content:space-between">{pill(b, "AuthChoice.dc.html", "white")}<span class="b2" style="text-decoration:underline;text-underline-offset:4px">{"Тренды" if ru else "Трендлар"}</span></div>
+  <div style="display:flex;align-items:center;justify-content:space-between">{action(b, "AuthChoice.dc.html", "rgba(255,255,255,.92)", light=True)}<span class="b2" style="text-decoration:underline;text-underline-offset:4px">{"Тренды" if ru else "Трендлар"}</span></div>
 </div>'''
 add("Welcome.dc.html", "Рәхим итегез", welcome(False))
 add("WelcomeRu.dc.html", "Добро пожаловать (RU)", welcome(True), lang_code="ru")
@@ -183,8 +186,8 @@ add("AuthChoice.dc.html", "Керү яки теркәлү", f'''
 <div class="body" style="position:relative;justify-content:flex-end;gap:14px;color:#fff;padding-bottom:40px">
   <h1 class="h0" style="text-wrap:balance">Сездә исәп язмасы бармы?</h1>
   <p class="b1" style="opacity:.9;margin-bottom:12px">Дәвам итү өчен керегез яки яңа хисап ачыгыз.</p>
-  {pill("Керү", "Login.dc.html", "white", "btn-wide")}
-  {pill("Теркәлү", "Register.dc.html", "glass", "btn-wide")}
+  {action("Керү", "Login.dc.html", "rgba(255,255,255,.92)", light=True)}
+  {action("Теркәлү", "Register.dc.html", "var(--sky2)", "right", light=True)}
 </div>''')
 
 # ================= 2. Регистрация / вход (стекло на фото, как в примере владельца) =================
@@ -201,7 +204,7 @@ add("Register.dc.html", "Теркәлү", f'''
   </div>
   <div style="display:flex;gap:8px">{"".join(f'<span class="chip glassy{" on" if c == "18–25" else ""}">{c}</span>' for c in ["10–14", "14–18", "18–25", "25+"])}</div>
   <div style="flex:1"></div>
-  <div style="display:flex;justify-content:flex-end">{roundbtn("LevelIntro.dc.html", "rgba(255,255,255,.85)", "Дәвам итү", 64)}</div>
+  {action("Дәвам итү", "LevelIntro.dc.html", "rgba(255,255,255,.92)", "right", light=True)}
 </div>''')
 
 add("Login.dc.html", "Керү", f'''
@@ -215,7 +218,7 @@ add("Login.dc.html", "Керү", f'''
   </div>
   <a class="b2" href="Register.dc.html" style="color:#fff;text-decoration:underline;text-underline-offset:4px;text-shadow:0 1px 8px rgba(0,0,0,.3)">Исәп язмасы юк — теркәлү</a>
   <div style="flex:1"></div>
-  <div style="display:flex;justify-content:flex-end">{roundbtn("LevelIntro.dc.html", "rgba(255,255,255,.85)", "Керү", 64)}</div>
+  {action("Керү", "LevelIntro.dc.html", "rgba(255,255,255,.92)", "right", light=True)}
 </div>''')
 
 # ================= 3. Тест уровня (дуги, звёзды, арка с фото) =================
@@ -279,7 +282,7 @@ def library(greet, img, name):
   <div style="color:#fff;display:flex;flex-direction:column;gap:6px">
     <h1 class="h0" style="font-size:40px;line-height:44px">{greet}</h1>
     <p class="b1" style="opacity:.92">Укуны дәвам итәбезме?</p>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">{pill("Укуны дәвам итү", "Reader.dc.html", "white")}<span class="b2" style="text-decoration:underline;text-underline-offset:4px">Трендлар</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">{action("Укуны дәвам итү", "Reader.dc.html", "rgba(255,255,255,.92)", light=True)}<span class="b2" style="text-decoration:underline;text-underline-offset:4px">Трендлар</span></div>
   </div>
   <div style="display:flex;gap:8px;margin-top:6px"><span class="chip on">Барысы</span><span class="chip">Әкиятләр</span><span class="chip">Хикәяләр</span><span class="chip">Тукай</span></div>
   <section style="display:flex;flex-direction:column;gap:12px">
@@ -440,24 +443,52 @@ add("ScannerBusy.dc.html", "Сканер · тану", f'''
   <div class="bar"><i style="width:55%;background:var(--sky)"></i></div>
   <p class="b2 soft" style="text-align:center">Бит базадагы дүрт китап белән чагыштырыла.</p>
   <div style="flex:1"></div>
-  <a class="btn btn-ghost btn-wide" href="ScannerFound.dc.html">Туктату</a>
+  <a class="btn btn-ghost btn-wide" href="ScannerText.dc.html">Туктату</a>
 </div>
 {nav("scan")}''')
 sua = BOOKS[0]
-add("ScannerFound.dc.html", "Сканер · табылды", f'''
-{scan_top}
-<div class="body" style="gap:16px;padding-top:0">
-  <div class="card" style="border:1px solid var(--line);display:flex;gap:14px;align-items:center">{cover(sua, 72, 100, 10)}
-    <div style="display:flex;flex-direction:column;gap:4px"><span class="ov" style="color:var(--forest)">Китап табылды</span><span class="h2">Су анасы</span><span class="b2 soft">Габдулла Тукай · 1908</span><div>{lv("B1")}</div></div></div>
-  {pill("Укырга", "Reader.dc.html", "sage", "btn-wide", ic("play", 18))}
-  <div class="divider">{orn(3, 16)}</div>
-  <span class="t2">Танылган текст</span>
-  <div class="seg" role="radiogroup" aria-label="Тел"><span class="on">{orn(1, 12, "var(--bg)")}Татарча</span><span>Русча</span></div>
-  <p class="rtext" style="font-size:17px">Җәй көне. Эссе һавада мин суда койнам, йөзәм;
-Чәчрәтәм, уйныйм, чумам, башым белән суны сөзәм.</p>
-  <p class="b3 muted">OCR нәтиҗәсе · чагыштыру ≥ 30 % сүз туры килү</p>
+SCAN_ORIG = ["Җәй көне. Эссе һавада мин суда койнам, йөзәм;", "Чәчрәтәм, уйныйм, чумам, башым белән суны сөзәм.",
+ "Шул рәвешчә бер сәгать ярым кадәрле уйнагач,", 'Инде, шаять, бер <span class="u-B2">сәгатьсез</span> тирләмәм дип уйлагач,',
+ "Йөгереп чыктым судан, тиз-тиз киендем өс-башым;", "Куркам үзем әллә нидән,&nbsp;— юк янымда юлдашым."]
+SCAN_AD = "Җәй көне бала елгада коена һәм ялгыз уйный. Ул суда озак вакыт рәхәтләнеп йөзә."
+SCAN_RU = "Летом мальчик купается и играет в реке. Он долго плавает и радуется жаркому дню."
+def scan_text(layer, matched=False, sheet=False):
+    text = {"or": "\n".join(SCAN_ORIG), "ad": SCAN_AD, "ru": SCAN_RU}[layer]
+    lbl = {"or": "Оригинал", "ad": "Адаптация", "ru": "Русча"}[layer]
+    if not matched:
+        found = ('<div class="card" style="border:1px solid var(--line);display:flex;gap:12px;align-items:center;padding:12px 14px">'
+                 '<span style="width:28px;height:28px;border-radius:999px;border:3px solid var(--sand);border-top-color:var(--forest);flex:none"></span>'
+                 '<div style="display:flex;flex-direction:column;gap:2px"><span class="t2">Бу өзек кайсы китаптан?</span><span class="b3 muted">Базадагы дүрт китап белән чагыштырабыз…</span></div></div>')
+    else:
+        found = (f'<a class="card" href="ScannerMatch.dc.html" style="border:1px solid var(--line);display:flex;gap:12px;align-items:center;padding:12px 14px;background:var(--sage-c)">{cover(sua, 44, 62, 8)}'
+                 '<div style="display:flex;flex-direction:column;gap:2px;flex:1"><span class="ov" style="color:var(--forest)">Китап табылды</span><span class="t2">Су анасы · Габдулла Тукай</span><span class="b3 muted">I бүлек · тулы версиясе базада бар</span></div>'
+                 f'<span class="muted">{ic("chev", 20)}</span></a>')
+    overlay = ""
+    if sheet:
+        overlay = f'''<div style="position:absolute;inset:0;background:rgba(29,49,40,.45)"></div>
+<div class="sheet" style="position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:14px;padding-bottom:28px">
+  <div class="handle"></div>
+  <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--forest)">{orn(2, 22, "var(--forest)")}</span><span class="ov" style="color:var(--forest)">Китап табылды</span></div>
+  <div style="display:flex;gap:16px;align-items:center">{cover(sua, 88, 124, 12)}
+    <div style="display:flex;flex-direction:column;gap:6px"><span class="h0" style="font-size:26px;line-height:30px">Су анасы</span><span class="b2 soft">Габдулла Тукай · 1908 · шигъри әкият</span>
+      <div style="display:flex;gap:8px;align-items:center">{lv("B1")}<span class="b3 muted">413 сүз · 28 бүлек</span></div></div></div>
+  <p class="b2 soft">Сканланган өзек — бу китапның I бүлеге. Тулы версиясен өч катламда укый аласыз.</p>
+  {pill("Тулы версиясен укырга", "BookDetail.dc.html", "sage", "btn-wide", ic("play", 18))}
+  <a class="btn btn-ghost btn-wide" href="ScannerText.dc.html">Юк, өзекне генә укыйм</a>
+</div>'''
+    return f'''
+<div class="top"><a class="iconbtn" href="ScannerStart.dc.html" aria-label="Артка">{ic("back")}</a><span class="t2">Танылган текст</span><button type="button" class="iconbtn" aria-label="Шрифт көйләүләре">{ic("aa")}</button></div>
+<div class="body" style="gap:14px;padding-top:0">
+  <div style="display:flex;flex-direction:column;gap:8px"><span class="ov muted">Катлаулылык</span>{seg(layer)}</div>
+  <span class="ov muted">{lbl} · фотодан танылган өзек</span>
+  <div style="flex:1;min-height:0;overflow:hidden"><p class="rtext" style="{"font-size:19px" if layer != "or" else ""}">{text}</p></div>
+  {found}
 </div>
-{nav("scan")}''')
+{nav("scan")}{overlay}'''
+add("ScannerText.dc.html", "Сканер · текст · оригинал", scan_text("or"))
+add("ScannerTextAd.dc.html", "Сканер · текст · адаптация", scan_text("ad"))
+add("ScannerTextRu.dc.html", "Сканер · текст · русча", scan_text("ru", matched=True))
+add("ScannerMatch.dc.html", "Сканер · китап табылды", scan_text("or", matched=True, sheet=True))
 
 # ================= 11. Профиль =================
 def srow(label, control, sub=""):
@@ -496,7 +527,7 @@ def components(dark):
   <div><h1 class="h0">TatLib · компонентлар {"· караңгы тема" if dark else "· якты тема"}</h1><p class="b2 soft">MASTER.md § 7 · v2 · 20.09.2026</p></div>
   {sect("Шрифтлар һәм хәрефләр ә ө ү җ ң һ", '<div style="display:flex;flex-direction:column;gap:10px"><p class="h0">Golos Text 600 · Рәхим итегез! Әә Өө Үү Җҗ Ңң Һһ</p><p class="display-i">Playfair Italic · Татарча күбрәк — Әә Өө Үү Җҗ Ңң Һһ</p><p class="b1">Golos Text 400 · Телне белү — дөньяны башкача күрү · Әә Өө Үү Җҗ Ңң Һһ</p><p class="rtext">Literata 18 · Нәкъ Казан артында бардыр бер авыл — «Кырлай» диләр. Әә Өө Үү Җҗ Ңң Һһ</p></div>')}
   {sect("Палитра", f'<div style="display:flex;gap:10px;flex-wrap:wrap">{swatches}</div>')}
-  {sect("Кнопкалар", f'<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div style="padding:12px;border-radius:16px;background:url({IMG["kremlin"]}) center/cover">{pill("Укуны дәвам итү", "#", "white")}</div>{pill("Укырга", "#", "sage", "", ic("play", 18))}{pill("Керү", "#", "ink")}<a class="btn btn-ghost" href="#">Теркәлү</a>{action("Тест узарга", "#", "var(--peach2)")}{roundbtn("#", "var(--sky2)", "Алга")}</div>')}
+  {sect("Кнопкалар — один компонент перехода везде", f'<div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">{action("Тест узарга", "#", "var(--peach2)")}{action("Үзем күрсәтермен", "#", "var(--sky2)")}<div style="padding:12px 16px;border-radius:16px;background:url({IMG["kremlin"]}) center/cover">{action("Укуны дәвам итү", "#", "rgba(255,255,255,.92)", light=True)}</div>{pill("Укырга", "#", "sage", "", ic("play", 18))}<a class="btn btn-ghost" href="#">Китапханәгә кайту</a></div>')}
   {sect("Чиплар һәм дәрәҗәләр", f'<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span class="chip on">Барысы</span><span class="chip">Китаплар</span>{levels}</div>')}
   {sect("Стеклянная форма на фото", f'<div style="width:390px;padding:20px;border-radius:24px;background:url({IMG["blossom"]}) center 40%/cover"><div class="glass">{field("Исем", "person")}{field("Серсүз", "lock", "", "eye-off")}</div></div>')}
   {sect("Катлам күчергече, сүз, мини-бар", f'<div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap"><div style="width:342px">{seg("or")}</div><div class="card" style="width:300px;box-shadow:var(--shadow);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:center;gap:10px"><span class="h2" style="font-size:24px">һәрьягы</span>{lv("B1")}</div><p class="b1" lang="ru">со всех сторон, вокруг</p></div><div style="width:390px;position:relative;height:64px">{mini_static}</div></div>')}
@@ -515,7 +546,8 @@ rows = [
     ("4 · Китапханә: иртә / көндез / кич", ["LibraryMorning.dc.html", "Library.dc.html", "LibraryEvening.dc.html"]),
     ("5–6 · Эзләү · Китап", ["Search.dc.html", "BookDetail.dc.html"]),
     ("7–8 · Ридер (оригинал, сүз, караңгы) · Recap", ["Reader.dc.html", "ReaderWord.dc.html", "ReaderDark.dc.html", "Recap.dc.html"]),
-    ("9–11 · Алгарышың · Сканер ×3 · Профиль", ["Progress.dc.html", "ScannerStart.dc.html", "ScannerBusy.dc.html", "ScannerFound.dc.html", "Profile.dc.html"]),
+    ("9 · Алгарышың · Профиль", ["Progress.dc.html", "Profile.dc.html"]),
+    ("10 · Сканер: камера → тану → текст с ползунком сложности → китап табылды", ["ScannerStart.dc.html", "ScannerBusy.dc.html", "ScannerText.dc.html", "ScannerTextAd.dc.html", "ScannerTextRu.dc.html", "ScannerMatch.dc.html"]),
     ("12 · Компонентлар: якты һәм караңгы тема", ["Components.dc.html", "ComponentsDark.dc.html"]),
 ]
 def build_canvas(existing=None):
