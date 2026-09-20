@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Строки библиотеки компонентов ui/components — дословно из docs/design/mockups/gen2.py.
+         Прописные для оверлайнов (labelSmall) компоненты делают сами (.uppercase()), как CSS .ov. -->
+
+    <!-- Нижняя навигация (nav) -->
+    <string name="nav_library">Китапханә</string>
+    <string name="nav_search">Эзләү</string>
+    <string name="nav_scanner">Скан</string>
+    <string name="nav_progress">Алгарыш</string>
+
+    <!-- Мини-бар (mini_reading) -->
+    <string name="mini_now_reading">Хәзер укыла</string>
+
+    <!-- Переключатель слоёв (seg) -->
+    <string name="layer_russian">Русча</string>
+    <string name="layer_adapted">Адаптация</string>
+    <string name="layer_original">Оригинал</string>
+    <string name="layer_switch_label">Текст катламы</string>
+
+    <!-- Кнопки и ссылки -->
+    <string name="action_close">Ябарга</string>
+    <string name="action_back">Артка</string>
+    <string name="action_read">Укырга</string>
+    <string name="action_all">Барысы</string>
+    <string name="action_forward">Алга</string>
+
+    <!-- Переключатель языка (lang) -->
+    <string name="lang_tat" translatable="false">TAT</string>
+    <string name="lang_ru" translatable="false">RU</string>
+    <string name="lang_switch_label">Тел / Язык</string>
+
+    <!-- contentDescription -->
+    <string name="cd_logo">TatLib</string>
+    <string name="cd_play">Укырга</string>
+    <string name="cd_selected">Сайланган</string>
+</resources>

@@ -26,3 +26,21 @@
 - `data/BookMeta.kt`: константная таблица `bookId → level / year / word_count / unique_words / blocks`, скопированная из базы (`text_complexity`, `books`, `book_stats`) с `TODO backend`; клиентский подсчёт слов даёт 930 и 1501 вместо 929 и 1500 у книг 2 и 4, поэтому только копия. `Book.displayLevel`, `Book.displayYear`.
 - `Misc.kt`: `colorForLevel` временно переведён на `LightTatlibColors.level(..).dot`, чтобы старые экраны компилировались до шага 4.2.
 - Мок книг (`MockData.suAnasy/shurale/najip`, `allBooks`, `bookById`) убирается в 4.3 группой D вместе с `RecapScreen` (→ `viewModel.getBook(id)`); `levelQuiz` и `levelFromScore` остаются.
+
+## Шаг 4.2 — компоненты (субагент Opus 5, отчёт перенесён)
+
+- `ui/components/`: `Buttons.kt`, `Chips.kt`, `Books.kt`, `TopBar.kt`, `Navigation.kt`, `Reader.kt`, `Progress.kt`, `Surfaces.kt`, `Internal.kt`, `ComponentsPreview.kt`; старые `Buttons/BookCard/BookCover/Misc/SimpleLineChart/TopBar/HeroBackground.kt` удалены. Старые экраны до шага 4.3 не собираются — переписываются целиком.
+- Иконки проверены по sources-jar `material-icons-core/extended 1.6.8` (dl.google.com): `AutoMirrored.Rounded.MenuBook`, `Rounded.CenterFocusWeak`, `BarChart`, `ChevronRight`, `CameraAlt`, `VisibilityOff` — есть. `SwitchDefaults.colors(checkedBorderColor)`, `SliderDefaults.colors(activeTickColor)` — есть в material3 1.2.1.
+- Оверлайны (`.ov`): прописные делают компоненты через `.uppercase()`, в ресурсах текст как в `gen2.py` (канон принят на 4.2).
+- `--ink`/`--bg` из CSS → `onBackground`/`background`; `.seg.on` в тёмной → `primary`/`onPrimary`.
+- Мини-бар в тёмной теме: CSS даёт `color: var(--bg)` на `sand-deep` (нечитаемо) → текст `onSurface`.
+- `ReadPill`, `ActionButton.OnPhoto`, `WhitePill`, `GlassChip.selected`: текст/узор на белом и sage2 — `colorScheme.scrim` (ink светлой / night тёмной), потому что `--ink` в тёмной = крем и пропал бы на белом.
+- `LevelRow`: выбранный круг 600/19 из макета → `titleLarge` (20), отдельного слота нет.
+- Тени CSS `0 X Y rgba(...)` → `Modifier.shadow(elevation ≈ blur/3, ambientColor/spotColor)`; цвет тени работает с API 28+, ниже — чёрная системная.
+- `CategoryTile`: тень картинки `Color.Black.copy(.28f)`, тень подписи на фото `Color.Black.copy(.35f)` — как в CSS (`rgba(0,0,0,…)`).
+- `FontSizeSlider`: «Аа» — литерал в коде (образец шрифта, одинаков в обоих языках).
+- `FilterChip`: визуал 36 dp внутри тач-цели 48 dp, pressed-состояние не реализовано.
+- `LayerSwitch`: анимируется только ползунок (220 мс, FastOutSlowIn), цвет подписи меняется мгновенно; `adaptedEnabled=false` для сканера (38 % альфа, без клика).
+- `GlassCard`/`GlassField`: без `Modifier.blur` (API 31+), заливка 34 % + рамка 55 % — по решению § 2.1 промта.
+- `BookCover`: id «1/2/3» → фото из drawable, любой другой id → типографическая обложка на `hero_sunset` (масштаб кегля от ширины через `LocalDensity`, не sp).
+- `TextLink`/`LanguageToggle`: подчёркивание рисуется `drawBehind` по нижней кромке текстового бокса (цвет `sage`/terracotta отличается от текста, `TextDecoration.Underline` не подходит).

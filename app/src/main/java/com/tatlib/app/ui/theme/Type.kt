@@ -72,7 +72,7 @@ val AppTypography = Typography(
     bodySmall = golos(FontWeight.Normal, 12, 16, 0.2),     // b3: метаданные
     labelLarge = golos(FontWeight.SemiBold, 15, 20, 0.2),  // lbl: кнопки, TAT/RU
     labelMedium = golos(FontWeight.SemiBold, 13, 18, 0.2), // чип уровня, сегменты слоёв
-    labelSmall = golos(FontWeight.Medium, 11, 14, 1.2)     // ov: оверлайны (текст в ресурсах — прописными)
+    labelSmall = golos(FontWeight.Medium, 11, 14, 1.2)     // ov: оверлайны (прописные делает компонент через .uppercase())
 )
 
 /** Шрифт ридера — Literata по умолчанию, Golos Text по выбору в профиле. */
