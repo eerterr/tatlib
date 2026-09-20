@@ -164,44 +164,6 @@ fun ReadPill(
 }
 
 /**
- * Белая пилюля `.btn-white` 52 dp с тенью — для кнопок поверх фото.
- * Где используется: экраны на фото, где нужна пилюля, а не круг-переход.
- */
-@Composable
-fun WhitePill(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    icon: ImageVector? = null
-) {
-    val content = MaterialTheme.colorScheme.scrim // ink / night: текст на белом всегда тёмный
-    val shadow = Color.Black.copy(alpha = 0.18f)
-    val interaction = remember { MutableInteractionSource() }
-    Row(
-        modifier = modifier
-            .height(52.dp)
-            .pressScale(interaction)
-            .shadow(6.dp, PillShape, ambientColor = shadow, spotColor = shadow)
-            .background(MaterialTheme.tatlibColors.onPhoto, PillShape)
-            .clip(PillShape)
-            .clickable(interactionSource = interaction, indication = LocalIndication.current, onClick = onClick)
-            .padding(horizontal = 24.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (icon != null) {
-            Box(
-                modifier = Modifier.size(28.dp).background(content.copy(alpha = 0.1f), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(icon, contentDescription = null, tint = content, modifier = Modifier.size(18.dp))
-            }
-        }
-        Text(text, style = MaterialTheme.typography.labelLarge, color = content)
-    }
-}
-
-/**
  * Текстовая ссылка `.btn-ghost`: 48 dp, без фона, ink, подчёркивание 1.5 dp `sage` с отступом.
  * Где используется: «Ябарга» во всплывашке, «Китапханәгә кайту» на Recap, «Галерея» в сканере, «Чыгу» в профиле.
  */
