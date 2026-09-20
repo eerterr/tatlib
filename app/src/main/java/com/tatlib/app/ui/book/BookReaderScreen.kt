@@ -340,7 +340,7 @@ private fun ReaderPiece(
             if (!tapEnabled) return@ClickableText
             val result = layout ?: return@ClickableText
             annotated.getStringAnnotations(WORD_TAG, offset, offset).firstOrNull()?.let { range ->
-                val lineEnd = result.getLineEnd(result.getLineForOffset(offset))
+                val lineEnd = result.getLineEnd(result.getLineForOffset(offset), visibleEnd = true)
                 onTap(range.item, baseOffset + range.start, baseOffset + range.end, baseOffset + lineEnd)
             }
         }

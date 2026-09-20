@@ -41,6 +41,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,6 +81,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import kotlin.coroutines.coroutineContext
 
 /**
  * Сканер (ScannerStart / Busy / Text / Match.dc.html): системная камера или галерея → OCR →
@@ -103,7 +105,8 @@ fun ScannerScreen(
     // 1 = Оригинал (татарский), 0 = Русча; «Адаптация» для OCR-текста недоступна.
     var layer by remember { mutableFloatStateOf(1f) }
     var showSheet by remember { mutableStateOf(false) }
-    var cameraUri by remember { mutableStateOf<Uri?>(null) }
+    // rememberSaveable: пока открыта системная камера, Activity может пересоздаться (поворот) — иначе снимок теряется.
+    var cameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var job by remember { mutableStateOf<Job?>(null) }
     // OCR вернул пустой текст без книги — иначе экран молча возвращается к старту.
     val noTextMessage = stringResource(R.string.reader_no_text)
@@ -153,7 +156,8 @@ fun ScannerScreen(
             } catch (e: Exception) {
                 error = e.message ?: "Не удалось распознать изображение"
             } finally {
-                isLoading = false
+                // Только свой job: старый, отменённый «Туктату», не должен сбросить флаг новому.
+                if (coroutineContext[Job] === job) isLoading = false
             }
         }
     }
@@ -168,7 +172,8 @@ fun ScannerScreen(
     val openCamera = {
         val uri = AppContextHolder.createImageUri()
         cameraUri = uri
-        cameraLauncher.launch(uri)
+        // Без приложения камеры (эмулятор) launch бросает ActivityNotFoundException.
+        runCatching { cameraLauncher.launch(uri) }.onFailure { error = it.message ?: it.javaClass.simpleName }
     }
 
     // Делегированные state-переменные не смарткастятся — id читаем в локальную val.
