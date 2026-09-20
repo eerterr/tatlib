@@ -1,39 +1,80 @@
 package com.tatlib.app.ui.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.tatlib.app.R
+import com.tatlib.app.data.Book
+import com.tatlib.app.data.displayLevel
 import com.tatlib.app.ui.AppViewModel
-import com.tatlib.app.ui.components.BookGridCard
-import com.tatlib.app.ui.components.LanguageToggle
-import com.tatlib.app.ui.components.PrimaryButton
-import com.tatlib.app.ui.components.SectionHeader
+import com.tatlib.app.ui.components.ActionButton
+import com.tatlib.app.ui.components.ActionStyle
 import com.tatlib.app.ui.components.AppLanguage
-import com.tatlib.app.ui.theme.AppShapes
+import com.tatlib.app.ui.components.BookCard
+import com.tatlib.app.ui.components.EmptyState
+import com.tatlib.app.ui.components.FilterChip
+import com.tatlib.app.ui.components.LanguageToggle
+import com.tatlib.app.ui.components.OnPhotoLink
+import com.tatlib.app.ui.components.PhotoHero
+import com.tatlib.app.ui.components.SectionHeader
+import com.tatlib.app.ui.components.TextLink
+import com.tatlib.app.ui.components.TopBar
+import com.tatlib.app.ui.components.TopBarLeft
+import com.tatlib.app.ui.navigation.Routes
+import com.tatlib.app.ui.search.GENRE_STORY
+import com.tatlib.app.ui.search.GENRE_TALE
+import com.tatlib.app.ui.theme.tatlibColors
+import java.util.Calendar
+
+/** Чипы над лентами: Барысы · Әкиятләр · Хикәяләр · Тукай. */
+private enum class LibraryFilter(val label: Int) {
+    ALL(R.string.action_all),
+    TALES(R.string.library_filter_tales),
+    STORIES(R.string.library_filter_stories),
+    TUKAY(R.string.library_filter_tukay);
+
+    fun matches(book: Book): Boolean = when (this) {
+        ALL -> true
+        TALES -> book.genre == GENRE_TALE
+        STORIES -> book.genre == GENRE_STORY
+        TUKAY -> book.author.contains("Тукай")
+    }
+}
 
 @Composable
 fun LibraryScreen(
@@ -44,343 +85,164 @@ fun LibraryScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
-    /*
-     * Берём первую книгу как книгу для блока
-     * "Продолжить чтение".
-     *
-     * Позже это можно заменить реальным сохранением
-     * последней открытой книги.
-     */
-    val continueBook = books.firstOrNull()
-
-    val continueProgress =
-        if (continueBook != null) {
-            viewModel.progress.value[continueBook.id] ?: 0f
-        } else {
-            0f
-        }
-
-    // =========================================================
-    // LOADING
-    // =========================================================
-
-    if (isLoading && books.isEmpty()) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            CircularProgressIndicator()
-
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
-
-            Text(
-                text = "Китаплар йөкләнә...",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-
-        return
-    }
-
-    // =========================================================
-    // ERROR
-    // =========================================================
-
-    if (error != null && books.isEmpty()) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            Text(
-                text = "Китапларны йөкләп булмады",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Medium
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-                text = error ?: "",
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-
-            PrimaryButton(
-                text = "Кабатлап карау",
-                onClick = {
-                    viewModel.loadBooks()
-                }
-            )
-        }
-
-        return
-    }
-
-    // =========================================================
-    // EMPTY
-    // =========================================================
-
+    // Загрузка / ошибка / пусто — как в прежнем экране, на плоском фоне (белый текст hero здесь не нужен).
     if (books.isEmpty()) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            Text(
-                text = "Китаплар юк",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Medium
-            )
+        Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center) {
+            when {
+                isLoading -> Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    CircularProgressIndicator(color = MaterialTheme.tatlibColors.forest)
+                    Text(stringResource(R.string.library_loading), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.tatlibColors.inkSoft)
+                }
+                error != null -> EmptyState(
+                    title = stringResource(R.string.library_load_failed),
+                    text = error.orEmpty(),
+                    action = { TextLink(stringResource(R.string.library_retry), onClick = { viewModel.loadBooks() }) }
+                )
+                else -> EmptyState(title = stringResource(R.string.library_empty), text = "")
+            }
         }
-
         return
     }
 
-    // =========================================================
-    // MAIN CONTENT
-    // =========================================================
+    // Границы времени суток: до 12 — иртә, 12–17 — көн, с 18 — кич.
+    val hour = remember { Calendar.getInstance().get(Calendar.HOUR_OF_DAY) }
+    val hero = when {
+        hour < 12 -> R.drawable.hero_morning
+        hour < 18 -> R.drawable.hero_day
+        else -> R.drawable.hero_evening
+    }
+    val greeting = when {
+        hour < 12 -> R.string.library_greeting_morning
+        hour < 18 -> R.string.library_greeting_day
+        else -> R.string.library_greeting_evening
+    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(
-                rememberScrollState()
-            )
-            .padding(horizontal = 30.dp)
-    ) {
+    var selectedFilter by rememberSaveable { mutableStateOf(LibraryFilter.ALL) }
+    val shown = books.filter { selectedFilter.matches(it) }
+    // Текущая книга — с прогрессом, иначе первая (00-ux-map п. 7); так же выбирает мини-бар в TatlibApp.
+    val continueBook = books.firstOrNull { it.progress > 0f } ?: books.first()
 
-        // =====================================================
-        // HEADER
-        // =====================================================
+    val scheme = MaterialTheme.colorScheme
+    val colors = MaterialTheme.tatlibColors
+    val scroll = rememberScrollState()
+    val sidePadding = PaddingValues(horizontal = 24.dp)
 
-        Row(
+    Box(Modifier.fillMaxSize().background(scheme.background)) {
+        PhotoHero(
+            painter = painterResource(hero),
+            height = 400.dp,
+            overlay = Brush.verticalGradient(
+                0.30f to scheme.scrim.copy(alpha = 0.05f),
+                0.75f to scheme.scrim.copy(alpha = 0.6f),
+                1.0f to scheme.background
+            ),
+            contentAlignment = Alignment.BottomCenter,
+            // Фото уезжает вместе с контентом, иначе тёмные заголовки секций наедут на фото при прокрутке.
+            modifier = Modifier.graphicsLayer { translationY = -scroll.value.toFloat() }
+        )
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp),
-            horizontalArrangement =
-                Arrangement.SpaceBetween,
-            verticalAlignment =
-                Alignment.Top
+                .fillMaxSize()
+                .verticalScroll(scroll)
+                .statusBarsPadding()
         ) {
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
-                Text(
-                    text = "Исәнме!",
-                    style = MaterialTheme.typography.displayLarge,
-                    fontWeight = FontWeight.Medium
-                )
-
-                Text(
-                    text = "Укуны дәвам итәбезме?",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            /*
-             * Языковой переключатель пока визуальный.
-             *
-             * Реальное переключение языка интерфейса
-             * сейчас не является частью backend-логики.
-             */
-            LanguageToggle(
-                language = AppLanguage.TAT,
-                onToggle = {}
-            )
-        }
-
-        // =====================================================
-        // CONTINUE READING
-        // =====================================================
-
-        if (continueBook != null) {
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp)
-                    .clip(AppShapes.large)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant
-                    )
-                    .clickable {
-                        navController.navigate(
-                            "book_detail/${continueBook.id}"
+            TopBar(
+                left = TopBarLeft.Logo,
+                onPhoto = true,
+                right = {
+                    // Переключение языка — вне scope (00-ux-map п. 21), как в прежнем экране.
+                    LanguageToggle(language = AppLanguage.TAT, onToggle = {}, onPhoto = true)
+                    IconButton(onClick = { navController.navigate(Routes.PROFILE) }) {
+                        Icon(
+                            Icons.Rounded.Person,
+                            contentDescription = stringResource(R.string.cd_profile),
+                            tint = colors.onPhoto,
+                            modifier = Modifier.size(22.dp)
                         )
                     }
-                    .padding(20.dp)
+                }
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(top = 120.dp, bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(22.dp)
             ) {
-
-                Text(
-                    text = "Киләсе адым",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Text(
-                    text = continueBook.title,
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(top = 6.dp)
-                )
-
-                Text(
-                    text = continueBook.author,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                if (continueProgress > 0f) {
-
-                    LinearProgressIndicator(
-                        progress = {
-                            continueProgress
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 14.dp)
-                            .clip(AppShapes.extraSmall),
-                        trackColor =
-                            MaterialTheme.colorScheme.surface,
-                        color =
-                            MaterialTheme.colorScheme.primary
+                Column(modifier = Modifier.padding(sidePadding), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(stringResource(greeting), style = MaterialTheme.typography.displayLarge, color = colors.onPhoto)
+                    Text(
+                        stringResource(R.string.library_continue_question),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = colors.onPhoto.copy(alpha = 0.92f)
                     )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ActionButton(
+                            text = stringResource(R.string.library_continue),
+                            onClick = { navController.navigate(Routes.bookReader(continueBook.id)) },
+                            style = ActionStyle.OnPhoto
+                        )
+                        // «Трендлар» в макете без перехода — экрана трендов нет.
+                        OnPhotoLink(text = stringResource(R.string.library_trends), onClick = {})
+                    }
                 }
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 18.dp),
-                    horizontalArrangement =
-                        Arrangement.SpaceBetween,
-                    verticalAlignment =
-                        Alignment.CenterVertically
+                        .horizontalScroll(rememberScrollState())
+                        .padding(sidePadding)
+                        .padding(top = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-
-                    PrimaryButton(
-                        text = "Укырга",
-                        onClick = {
-                            navController.navigate(
-                                "book_reader/${continueBook.id}"
-                            )
-                        }
-                    )
-
-                    Text(
-                        text = "Татарча уку",
-                        style =
-                            MaterialTheme.typography.bodyLarge,
-                        color =
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-
-        // =====================================================
-        // MY BOOKS
-        // =====================================================
-
-        SectionHeader(
-            title = "Минем китапларым",
-            actionLabel = "Барысын карау",
-            onActionClick = {
-                navController.navigate("search")
-            },
-            modifier = Modifier.padding(
-                top = 34.dp,
-                bottom = 14.dp
-            )
-        )
-
-        LazyRow(
-            horizontalArrangement =
-                Arrangement.spacedBy(14.dp)
-        ) {
-
-            items(
-                items = books,
-                key = { book ->
-                    book.id
-                }
-            ) { book ->
-
-                BookGridCard(
-                    book = book,
-                    onClick = {
-                        navController.navigate(
-                            "book_detail/${book.id}"
-                        )
+                    LibraryFilter.entries.forEach { item ->
+                        FilterChip(text = stringResource(item.label), selected = selectedFilter == item, onClick = { selectedFilter = item })
                     }
+                }
+
+                Shelf(
+                    title = stringResource(R.string.library_my_books),
+                    books = shown,
+                    subtitle = { stringResource(R.string.meta_pair, it.author, it.displayLevel.label) },
+                    onAll = { navController.navigate(Routes.SEARCH) },
+                    onBook = { navController.navigate(Routes.bookDetail(it.id)) },
+                    sidePadding = sidePadding
+                )
+                Shelf(
+                    title = stringResource(R.string.library_recommended),
+                    books = shown.reversed(),
+                    subtitle = { it.author },
+                    onAll = { navController.navigate(Routes.SEARCH) },
+                    onBook = { navController.navigate(Routes.bookDetail(it.id)) },
+                    sidePadding = sidePadding
                 )
             }
         }
+    }
+}
 
-        // =====================================================
-        // RECOMMENDATIONS
-        // =====================================================
-
+/** Секция ленты: заголовок с «Барысы» + ряд карточек 150×225, лента уходит под край экрана. */
+@Composable
+private fun Shelf(
+    title: String,
+    books: List<Book>,
+    subtitle: @Composable (Book) -> String,
+    onAll: () -> Unit,
+    onBook: (Book) -> Unit,
+    sidePadding: PaddingValues
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionHeader(
-            title = "Тәкъдим итәбез",
-            actionLabel = "Барысын карау",
-            onActionClick = {
-                navController.navigate("search")
-            },
-            modifier = Modifier.padding(
-                top = 34.dp,
-                bottom = 14.dp
-            )
+            title = title,
+            actionLabel = stringResource(R.string.action_all),
+            onAction = onAll,
+            modifier = Modifier.padding(sidePadding)
         )
-
-        LazyRow(
-            horizontalArrangement =
-                Arrangement.spacedBy(14.dp)
-        ) {
-
-            items(
-                items = books.reversed(),
-                key = { book ->
-                    "recommendation_${book.id}"
-                }
-            ) { book ->
-
-                BookGridCard(
-                    book = book,
-                    onClick = {
-                        navController.navigate(
-                            "book_detail/${book.id}"
-                        )
-                    }
-                )
+        LazyRow(contentPadding = sidePadding, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            items(books, key = { it.id }) { book ->
+                BookCard(book = book, onClick = { onBook(book) }, subtitle = subtitle(book))
             }
         }
-
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
     }
 }

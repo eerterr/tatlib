@@ -1,27 +1,55 @@
 package com.tatlib.app.ui.book
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.tatlib.app.R
+import com.tatlib.app.data.BookMetaTable
+import com.tatlib.app.data.displayLevel
+import com.tatlib.app.data.displayYear
 import com.tatlib.app.ui.AppViewModel
-import com.tatlib.app.ui.components.PrimaryButton
-import com.tatlib.app.ui.components.ScreenTopBar
+import com.tatlib.app.ui.components.BookCover
+import com.tatlib.app.ui.components.LevelChip
+import com.tatlib.app.ui.components.ReadPill
+import com.tatlib.app.ui.components.StatValue
+import com.tatlib.app.ui.components.TopBar
+import com.tatlib.app.ui.components.TopBarLeft
+import com.tatlib.app.ui.navigation.Routes
+import com.tatlib.app.ui.search.genreLabel
+import com.tatlib.app.ui.theme.PillShape
+import com.tatlib.app.ui.theme.tatlibColors
 
 @Composable
 fun BookDetailScreen(
@@ -29,139 +57,145 @@ fun BookDetailScreen(
     viewModel: AppViewModel,
     bookId: String
 ) {
+    val books by viewModel.books.collectAsState()
     val selectedBook by viewModel.selectedBook.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
     LaunchedEffect(bookId) {
-        val id = bookId.toIntOrNull()
-
-        if (id != null) {
-            viewModel.loadBook(id)
-        }
+        bookId.toIntOrNull()?.let { viewModel.loadBook(it) }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 30.dp)
-    ) {
-        ScreenTopBar(
-            onBack = {
-                navController.popBackStack()
-            },
-            showLanguageToggle = false,
-            modifier = Modifier.padding(
-                top = 16.dp,
-                bottom = 8.dp
-            )
-        )
+    // Карточка — из списка книг (жанр, автор); текст блоков приходит в selectedBook после loadBook.
+    val loaded = selectedBook?.takeIf { it.id == bookId }
+    val book = books.firstOrNull { it.id == bookId } ?: loaded
 
-        if (isLoading && selectedBook == null) {
+    val scheme = MaterialTheme.colorScheme
+    val colors = MaterialTheme.tatlibColors
+
+    if (book == null) {
+        Box(Modifier.fillMaxSize().background(scheme.background), contentAlignment = Alignment.Center) {
+            when {
+                isLoading -> Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    CircularProgressIndicator(color = colors.forest)
+                    Text(stringResource(R.string.book_loading), style = MaterialTheme.typography.titleMedium, color = colors.inkSoft)
+                }
+                error != null -> Text(error.orEmpty(), style = MaterialTheme.typography.bodyLarge, color = scheme.error, modifier = Modifier.padding(24.dp))
+                else -> Text(stringResource(R.string.book_not_found), style = MaterialTheme.typography.titleLarge, color = scheme.onBackground)
+            }
+        }
+        return
+    }
+
+    // Описание — первый абзац adapted_text первого блока; пока не загружено — ничего.
+    val description = loaded?.pages?.firstOrNull()?.adaptedText
+        ?.substringBefore("\n\n")?.trim()?.takeIf { it.isNotEmpty() }
+    val meta = BookMetaTable.of(book.id)
+
+    Box(Modifier.fillMaxSize().background(scheme.background)) {
+        // Фон «страницы альбома»: та же обложка, увеличенная; blur недоступен ниже API 31 — только градиент.
+        Box(Modifier.fillMaxWidth().height(470.dp).clipToBounds()) {
+            Image(
+                painter = painterResource(
+                    when (book.id) {
+                        "1" -> R.drawable.cover_su_anasy
+                        "2" -> R.drawable.cover_shurale
+                        "3" -> R.drawable.cover_najip
+                        else -> R.drawable.hero_sunset
+                    }
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize().graphicsLayer { scaleX = 1.3f; scaleY = 1.3f }
+            )
+            Box(
+                Modifier.fillMaxSize().background(
+                    Brush.verticalGradient(
+                        0.0f to scheme.scrim.copy(alpha = 0.25f),
+                        0.55f to scheme.background.copy(alpha = 0.2f),
+                        1.0f to scheme.background
+                    )
+                )
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .statusBarsPadding()
+        ) {
+            TopBar(
+                left = TopBarLeft.Back,
+                onLeft = { navController.popBackStack() },
+                onPhoto = true,
+                right = {
+                    // «…» в макете без действия — меню страницы книги не проектировалось.
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Rounded.MoreHoriz, contentDescription = null, tint = colors.onPhoto)
+                    }
+                }
+            )
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 48.dp),
+                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CircularProgressIndicator()
+                BookCover(book, width = 190.dp, height = 285.dp, radius = 18.dp)
 
-                Text(
-                    text = "Китап йөкләнә...",
-                    style = MaterialTheme.typography.titleMedium
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(book.title, style = MaterialTheme.typography.headlineMedium, color = scheme.onBackground, textAlign = TextAlign.Center)
+                    Text(
+                        stringResource(R.string.meta_pair, book.author, book.displayYear),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = colors.inkSoft,
+                        textAlign = TextAlign.Center
+                    )
+                    Row(
+                        modifier = Modifier.padding(top = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        LevelChip(book.displayLevel)
+                        if (book.genre.isNotBlank()) GenreChip(genreLabel(book.genre))
+                    }
+                }
+
+                ReadPill(
+                    text = stringResource(R.string.action_read),
+                    onClick = { navController.navigate(Routes.bookReader(book.id)) },
+                    fullWidth = true
                 )
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    StatValue(meta?.wordCount?.toString() ?: "—", stringResource(R.string.book_stat_words))
+                    StatValue(meta?.uniqueWords?.toString() ?: "—", stringResource(R.string.book_stat_unique_words))
+                    StatValue(meta?.blocks?.toString() ?: "—", stringResource(R.string.book_stat_blocks))
+                }
+
+                if (description != null) {
+                    Text(description, style = MaterialTheme.typography.bodyLarge, color = scheme.onBackground, modifier = Modifier.fillMaxWidth())
+                    Text(
+                        stringResource(R.string.book_description_caption),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colors.inkMuted,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
-
-            return@Column
         }
+    }
+}
 
-        if (error != null && selectedBook == null) {
-            Text(
-                text = error ?: "Китапны йөкләп булмады",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 32.dp)
-            )
-
-            return@Column
-        }
-
-        val book = selectedBook ?: run {
-            Text(
-                text = "Китап табылмады",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(top = 32.dp)
-            )
-
-            return@Column
-        }
-
-        Text(
-            text = book.title,
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(
-                top = 20.dp,
-                bottom = 8.dp
-            )
-        )
-
-        Text(
-            text = book.author,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 20.dp)
-        )
-
-        if (book.genre.isNotBlank()) {
-            Text(
-                text = book.genre,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-        }
-
-        Text(
-            text = "Дәрәҗә: ${book.level.label}",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        if (book.description.isNotBlank()) {
-            Text(
-                text = book.description,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 28.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            if (book.readingTimeLabel.isNotBlank()) {
-                Text(
-                    text = book.readingTimeLabel,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            Text(
-                text = "${book.pageCount} бүлек",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        PrimaryButton(
-            text = "Укый башлау",
-            onClick = {
-                navController.navigate("book_reader/${book.id}")
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 32.dp)
-        )
+/** Чип жанра `.chip` 28 dp рядом с чипом уровня — без клика (FilterChip в компонентах 36 dp с тач-целью 48). */
+@Composable
+private fun GenreChip(text: String) {
+    Box(
+        modifier = Modifier
+            .height(28.dp)
+            .background(MaterialTheme.colorScheme.surfaceVariant, PillShape)
+            .padding(horizontal = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
