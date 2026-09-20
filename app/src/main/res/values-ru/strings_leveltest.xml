@@ -20,7 +20,6 @@
 
     <!-- Progress -->
     <string name="progress_title">Твой прогресс</string>
-    <string name="cd_profile">Профиль</string>
     <string name="progress_period_week">Неделя</string>
     <string name="progress_period_month">Месяц</string>
     <string name="progress_period_year">Год</string>

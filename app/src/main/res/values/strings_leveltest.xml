@@ -24,7 +24,6 @@
 
     <!-- Progress («Алгарышың») -->
     <string name="progress_title">Алгарышың</string>
-    <string name="cd_profile">Профиль</string>
     <string name="progress_period_week">Атна</string>
     <string name="progress_period_month">Ай</string>
     <string name="progress_period_year">Ел</string>
