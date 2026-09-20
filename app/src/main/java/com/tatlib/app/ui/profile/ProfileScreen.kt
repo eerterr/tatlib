@@ -1,5 +1,7 @@
 package com.tatlib.app.ui.profile
 
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -86,6 +88,7 @@ fun ProfileScreen(navController: NavHostController, viewModel: AppViewModel) {
             Column(
                 modifier = Modifier
                     .weight(1f)
+                    .verticalScroll(rememberScrollState())
                     .padding(start = 24.dp, end = 24.dp, top = 60.dp, bottom = 24.dp)
                     .navigationBarsPadding(),
                 verticalArrangement = Arrangement.spacedBy(18.dp)
@@ -179,7 +182,7 @@ fun ProfileScreen(navController: NavHostController, viewModel: AppViewModel) {
                     }
                 }
 
-                Spacer(Modifier.weight(1f))
+                Spacer(Modifier.height(24.dp))
 
                 TextLink(
                     text = stringResource(R.string.profile_logout),

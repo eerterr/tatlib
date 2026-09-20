@@ -1,5 +1,7 @@
 package com.tatlib.app.ui.book
 
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -84,6 +86,7 @@ fun RecapScreen(navController: NavHostController, viewModel: AppViewModel, bookI
             Column(
                 Modifier
                     .weight(1f)
+                    .verticalScroll(rememberScrollState())
                     .padding(start = 24.dp, end = 24.dp, top = 150.dp, bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(22.dp)
             ) {
@@ -120,11 +123,14 @@ fun RecapScreen(navController: NavHostController, viewModel: AppViewModel, bookI
                         )
                     }
                 }
-                Spacer(Modifier.weight(1f))
+                Spacer(Modifier.height(24.dp))
                 ReadPill(
                     text = stringResource(R.string.action_read),
                     onClick = {
-                        if (book != null) navController.navigate(Routes.bookReader(book.id)) else toLibrary()
+                        if (book != null) {
+                            // Не копить пары reader → recap в стеке.
+                            navController.navigate(Routes.bookReader(book.id)) { popUpTo(Routes.BOOK_READER) { inclusive = true } }
+                        } else toLibrary()
                     },
                     fullWidth = true
                 )

@@ -34,4 +34,6 @@
     <string name="cd_logo">TatLib</string>
     <string name="cd_play">Укырга</string>
     <string name="cd_selected">Сайланган</string>
+    <!-- Образец шрифта у слайдера кегля (одинаков в обоих языках) -->
+    <string name="reader_font_sample" translatable="false">Аа</string>
 </resources>

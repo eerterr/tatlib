@@ -96,9 +96,11 @@ fun BookReaderScreen(
         bookId.toIntOrNull()?.let { id -> viewModel.loadBook(id) }
     }
 
-    val book = selectedBook
+    val loadError by viewModel.error.collectAsState()
+    // selectedBook может хранить предыдущую книгу, пока грузится эта.
+    val book = selectedBook?.takeIf { it.id == bookId }
     if (book == null) {
-        ReaderMessage(stringResource(R.string.reader_loading)) { navController.popBackStack() }
+        ReaderMessage(loadError ?: stringResource(R.string.reader_loading)) { navController.popBackStack() }
         return
     }
 

@@ -245,7 +245,7 @@ private fun ScannerStart(error: String?, onClose: () -> Unit, onGallery: () -> U
     val colors = MaterialTheme.tatlibColors
     ScanTop(onClose, onGallery)
     Column(
-        Modifier.fillMaxSize().padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
+        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         Text(
@@ -273,7 +273,7 @@ private fun ScannerStart(error: String?, onClose: () -> Unit, onGallery: () -> U
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.height(18.dp)) // колонка прокручивается: weight тут не работает
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
@@ -302,7 +302,7 @@ private fun ScannerBusy(onClose: () -> Unit, onGallery: () -> Unit, onStop: () -
     val colors = MaterialTheme.tatlibColors
     ScanTop(onClose, onGallery)
     Column(
-        Modifier.fillMaxSize().padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
+        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         Text(
@@ -339,7 +339,7 @@ private fun ScannerBusy(onClose: () -> Unit, onGallery: () -> Unit, onStop: () -
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.height(18.dp)) // колонка прокручивается: weight тут не работает
         TextLink(stringResource(R.string.scanner_stop), onClick = onStop, fullWidth = true)
     }
 }

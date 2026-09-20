@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -69,7 +68,7 @@ fun TatlibApp() {
                         onSelect = { route ->
                             if (route != currentRoute) {
                                 navController.navigate(route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
+                                    popUpTo(Routes.LIBRARY) {
                                         saveState = true
                                     }
                                     launchSingleTop = true

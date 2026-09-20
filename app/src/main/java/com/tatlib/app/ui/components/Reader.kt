@@ -181,7 +181,7 @@ fun FontSizeSlider(
 ) {
     val forest = MaterialTheme.tatlibColors.forest
     Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Аа", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface)
+        Text(stringResource(R.string.reader_font_sample), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface)
         Slider(
             value = valueSp.toFloat(),
             onValueChange = { onChange(it.roundToInt()) },
@@ -196,6 +196,6 @@ fun FontSizeSlider(
                 inactiveTickColor = Color.Transparent
             )
         )
-        Text("Аа", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
+        Text(stringResource(R.string.reader_font_sample), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
     }
 }
