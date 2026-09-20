@@ -105,6 +105,8 @@ fun ScannerScreen(
     var showSheet by remember { mutableStateOf(false) }
     var cameraUri by remember { mutableStateOf<Uri?>(null) }
     var job by remember { mutableStateOf<Job?>(null) }
+    // OCR вернул пустой текст без книги — иначе экран молча возвращается к старту.
+    val noTextMessage = stringResource(R.string.reader_no_text)
 
     fun reset() {
         job?.cancel()
@@ -137,6 +139,7 @@ fun ScannerScreen(
                 bookId = response.book_id
                 bookTitle = response.book_title
                 bookAuthor = response.book_author
+                if (response.text.isBlank() && !response.book_found) error = noTextMessage
 
                 // Перевод запрашиваем при любом непустом тексте, чтобы слой «Русча» работал и для найденной книги.
                 if (response.text.isNotBlank()) {
