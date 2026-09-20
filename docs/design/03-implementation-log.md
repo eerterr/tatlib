@@ -84,3 +84,18 @@
 - Жанры API (`сказка в стихах`, `рассказ`) → `шигъри әкият` / `хикәя` через `internal genreLabel()` в `SearchScreen.kt`, используется Library и BookDetail.
 - BookDetail: фон — обложка `graphicsLayer(1.3f)` + `clipToBounds` без blur (API < 31); подпись без «· чыганак: …» (`source_note` в API нет); чип жанра — private `GenreChip` 28 dp; «…» без действия; книга из `viewModel.books` (`collectAsState`), текст из `selectedBook` при совпадении id.
 - Строки `meta_pair`/`meta_triple` (`%1$s · %2$s[ · %3$s]`) `translatable="false"`, чтобы « · » не хардкодить.
+
+### Группа D — BookReader, Recap, Scanner (коммит 60dbcca → cherry-pick)
+
+- `MockData.kt`: удалены `suAnasy/shurale/najip/allBooks/bookById/ProgressStats/progressStats/inspirationalQuotes`; остались `QuizOption/QuizQuestion/levelQuiz/levelFromScore`.
+- Reader: подпись слоя — арабская «{N} бүлек» вместо римской «I»; счётчик «{N} бүлек · {сүз} сүз» скрыт при `pageCount == 1` (00-ux-map п. 15) — у «Шүрәле» цифра слов внизу не видна.
+- Reader: «← Артка / Алга →» — `TextLink` (labelLarge, подчёркивание sage), не bodySmall muted как в макете; на последней странице «Тәмамлау» → `Routes.recap(id)` — единственное изменение навигации (PROMPT § 3).
+- Reader: подсветка выбранного слова — `SpanStyle(background)` без r4.
+- Reader: подчёркивание слов выше уровня реализовано (`drawBehind` по `getBoundingBox`, 1.5 dp цветом `level().dot`), карта `hardWords` пуста — API токенов нет; `AppPreferences.underlineHardWords` учитывается.
+- Reader: лист «Аа» — `ModalBottomSheet` + `BottomSheetCard`, чипы `FilterChip` 36 dp; `AnimatedContent` ключуется по тексту (слой + страница), scroll на страницу общий для слоёв; при смене слоя всплывашка исчезает, `selectedWord` в ViewModel не очищается.
+- Recap: «×» на белом круге 60 % — своя `IconButton` 48 dp; «Укырга» ведёт в Reader (в коде было BookDetail, в макете Reader); `book == null` → обе кнопки в LIBRARY; статистика — три «—».
+- Scanner Start: визир пустой (sand) с иконкой камеры — фото Казани из макета не ставится (фальшивое превью при системной камере).
+- Scanner Busy: индикатор неопределённый `LinearProgressIndicator` sky/surfaceVariant вместо «55 %»; «Туктату» отменяет `Job` корутины (`CancellationException` пробрасывается, Retrofit-вызов отменяется).
+- Scanner Text: `translateOcrText` вызывается при любом непустом тексте (и для найденной книги) — слой «Русча» работает всегда; карточка «Бу өзек кайсы китаптан?» не показывается (сравнение приходит вместе с распознаванием); в карточке найденной книги только «тулы версиясе базада бар» (номер блока API не отдаёт); добавлено состояние `bookAuthor` из `OcrResponse.book_author`.
+- Scanner Match: `ModalBottomSheet` + `BottomSheetCard`; «{author} · {year}» без жанра; текст листа — «Тулы версиясен өч катламда укый аласыз.»; год/слова/блоки/уровень из `BookMetaTable`; «Аа» в шапке сканера без действия.
+- Фолбэки `e.message` («Не удалось распознать изображение», «Не удалось открыть изображение») оставлены в коде по-русски — логика, не UI-строки.
