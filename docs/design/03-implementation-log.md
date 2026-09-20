@@ -71,3 +71,16 @@
 - `data/UserMeta.kt`: уровень B1 и возраст 18 скопированы из `users`/`user_level_state` с `TODO backend`.
 - Profile: нижняя навигация не рисуется (маршрут не в `bottomBarRoutes`), низ — `navigationBarsPadding()`; экран без прокрутки — на экранах ниже ~700 dp возможен клип; чипы темы/шрифта `FilterChip` 36 dp вместо 32; чип «Literata» не в шрифте Literata; «Укучы» `headlineMedium` 30/36 вместо 26/30; иконка Settings без действия; тень аватара `tatlibColors.shadow` (в тёмной прозрачная).
 - RU-строки: «переводы / уникальные слова / активные дни» без склонения по числу; «%1$d лет»; «Алгарышың» → «Твой прогресс»; фраза дня `translatable="false"`.
+
+### Группа C — Library, Search, BookDetail (коммит eb3bb6e → cherry-pick)
+
+- Library: время суток — `HOUR_OF_DAY < 12` иртә, `12–17` көн, `≥ 18` кич (`java.util.Calendar`, без desugaring).
+- Library: hero сдвигается вместе с прокруткой (`graphicsLayer { translationY = −scroll }`), иначе тёмные заголовки секций наезжали бы на фото.
+- Library: «Трендлар» без действия; ряд чипов прокручивается горизонтально (в макете 4-й чип обрезан); ленты `LazyRow` с `contentPadding` 24 уходят под край экрана.
+- Library: состояния загрузки/ошибки/пусто перенесены из старого экрана (`library_loading`, `library_load_failed` + `TextLink("Кабатлап карау")`, `library_empty`) — в макете их нет.
+- Search: плитки «Тукай» и «Дәрәҗәм B1» — в теме добавлены токены `tileSteel #3F6F8A` и `tileHoney #8C6A1F` из `tile()` (агент временно брал `sky`/`sunset`, белый текст на `sky` ≈ 1.8:1 — исправлено главной сессией).
+- Search: уровень пользователя — константа `TatarLevel.B1` с `TODO backend`; тап по плитке фильтрует список, повторный снимает; пустой результат — `EmptyState` без текста; старые чипы и `inspirationalQuotes` убраны; счётчики — `plurals` (`values/` one/other, `values-ru/` one/few/many/other).
+- Search: спиннер только при `isLoading && books.isEmpty()` (флаг общий с `loadBook`).
+- Жанры API (`сказка в стихах`, `рассказ`) → `шигъри әкият` / `хикәя` через `internal genreLabel()` в `SearchScreen.kt`, используется Library и BookDetail.
+- BookDetail: фон — обложка `graphicsLayer(1.3f)` + `clipToBounds` без blur (API < 31); подпись без «· чыганак: …» (`source_note` в API нет); чип жанра — private `GenreChip` 28 dp; «…» без действия; книга из `viewModel.books` (`collectAsState`), текст из `selectedBook` при совпадении id.
+- Строки `meta_pair`/`meta_triple` (`%1$s · %2$s[ · %3$s]`) `translatable="false"`, чтобы « · » не хардкодить.
